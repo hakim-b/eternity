@@ -7,5 +7,6 @@
     <children>
         <Button layoutX="128.0" layoutY="107.0" onAction="#btnClickAction" text="Click Me!" />
         <Label fx:id="lblOut" layoutX="53.0" layoutY="30.0" minHeight="16" minWidth="69" prefHeight="52.0" prefWidth="215.0" />
+        <Button layoutX="34" layoutY="23" text="Hello"/>
     </children>
 </AnchorPane>
