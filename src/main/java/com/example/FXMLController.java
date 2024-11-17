@@ -50,6 +50,72 @@ public class FXMLController implements Initializable {
         return result;
     }
 
+    /*
+     * Computes the standard deviation given a dataset of double (decimal) values.
+     * Note: dataset parameter must be extracted elsewhere, users are not prompted
+     * for them here.
+     */
+    public static double standardDeviation(double[] dataset) {
+        int numDataPoints = dataset.length;
+        if (numDataPoints == 0)
+            throw new IllegalArgumentException("ERROR: dataset must contain at least one data point.");
+        if (numDataPoints == 0)
+            return 0; //theoretical property of standard deviation 
+
+        // Stage #1: compute the mean of the dataset
+        double sum = 0.0;
+        for (double data : dataset)
+            sum += data;
+        double mean = sum / numDataPoints;
+        System.out.println("The Mean of the Dataset is " + mean + ".");
+
+        // Stage #2: compute the sum of squared deviations
+        double squareDeviationSum = 0.0;
+        for (double data : dataset)
+            squareDeviationSum += ((data - mean) * (data - mean));
+
+        // Stage #3: compute and return the standard deviation
+        double standardDeviation = squaredRoot(squareDeviationSum / numDataPoints);
+        System.out.println("The Standard Deviation of the Dataset is " + standardDeviation + ".");
+        return standardDeviation;
+    }
+
+    /*
+     * Auxiliary method for mathematical computations, returning the squared root of
+     * the given double (decimal) value.
+     */
+    public static double squaredRoot(double value) {
+        if (value < 0)
+            throw new IllegalArgumentException("ERROR: cannot compute the square root of a negative number.");
+        if (value == 0)
+            return 0; //theoretical property of square root
+        
+        // Initial guess for the square root, beginning at half the value
+        double guess = value / 2.0;
+
+        // Defines the tolerance level for the approximation, being nine decimal places
+        double epsilon = 1e-9;
+
+        // Employs Netwon's method for approximating the square root
+        while (absoluteValue(guess * guess - value) > epsilon)
+            guess = (guess + (value / guess)) / 2.0;
+
+        // Returns square root on condition that the difference between guess^2 and
+        // the original value is within the epsilon tolerance level.
+        return guess;
+    }
+
+    /*
+     * Auxiliary method for mathematical computations, returns the absolute value of
+     * the given double (decimal) value.
+     */
+    public static double absoluteValue(double value) {
+        if (value < 0)
+            return value * -1;
+        else
+            return value;
+    }
+
     @FXML
     private void btnClickAction(ActionEvent event) {
         lblOut.setText("At this age, how are there man still hatin?");
