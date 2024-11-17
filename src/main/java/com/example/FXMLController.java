@@ -28,14 +28,23 @@ public class FXMLController implements Initializable {
             1.5056327351493116e-7
     };
 
+    // Constants we'll need
+    private static final double PI = 3.141592653589793238462643383279502884;
+    private static final double E = 2.718281828459045235360287471352662497;
+
+    /**
+     * Computes the gamma of a number
+     * @param x the input number
+     * @return the computed value
+     */
     public static double gamma(double x) {
-        if (x <= 0 && Math.floor(x) == x) {
+        if (x <= 0 && floor(x) == x) {
             throw new IllegalArgumentException("Gamma function has poles at zero and negative integers");
         }
 
         // Reflection formula for negative numbers
         if (x < 0.5) {
-            return Math.PI / (Math.sin(Math.PI * x) * gamma(1 - x));
+            return PI / (sin(PI * x) * gamma(1 - x));
         }
 
         x -= 1;
@@ -45,9 +54,126 @@ public class FXMLController implements Initializable {
         }
 
         double t = x + p.length - 0.5;
-        double result = Math.sqrt(2 * Math.PI) * Math.pow(t, x + 0.5) * Math.exp(-t) * a;
+        return sqrt(2 * PI) * pow(t, x + 0.5) * exp(-t) * a;
+    }
 
-        return result;
+    /**
+     * Returns the floor of a number
+     * @param x the input number
+     * @return the floored result
+     */
+    private static double floor(double x) {
+        int intValue = (int) x;
+        return x < intValue ? intValue - 1 : intValue;
+    }
+
+    /**
+     * Computed the sin value of a real number
+     * @param x the input number
+     * @return the computed sin value
+     */
+    private static double sin(double x) {
+        // Normalize x to be between -2π and 2π
+        x = x % (2 * PI);
+
+        double term = x;
+        double sum = x;
+
+        for (int i = 1; i <= 10; i++) {
+            term = -term * x * x / (2 * i * (2 * i + 1));
+            sum += term;
+            if (abs(term) < 1e-10) break;
+        }
+
+        return sum;
+    }
+
+    /**
+     * Computes e^x
+     * @param x the input exponent
+     * @return the computed value
+     */
+    private static double exp(double x) {
+        double term = 1;
+        double sum = 1;
+
+        for (int i = 1; i <= 100; i++) {
+            term *= x / i;
+            sum += term;
+            if (abs(term) < 1e-10) break;
+        }
+
+        return sum;
+    }
+
+    /**
+     * Computes the value of a base raised to an exponent
+     * @param base the input base
+     * @param exponent the input exponent
+     * @return the computed value
+     */
+    private static double pow(double base, double exponent) {
+        // Handle special cases
+        if (exponent == 0) return 1;
+        if (base == 0) return 0;
+
+        // Handle integer exponents more efficiently
+        if (floor(exponent) == exponent) {
+            double result = 1;
+            long exp = (long) abs(exponent);
+            while (exp > 0) {
+                if ((exp & 1) == 1) result *= base;
+                base *= base;
+                exp >>= 1;
+            }
+            return exponent < 0 ? 1 / result : result;
+        }
+
+        // For other cases, use exp(ln(base) * exponent)
+        return exp(ln(base) * exponent);
+    }
+
+    // Custom implementation of natural logarithm using Taylor series
+    private static double ln(double x) {
+        if (x <= 0) throw new IllegalArgumentException("ln(x) is undefined for x <= 0");
+
+        // Scale x to [0.5, 1.5] for better convergence
+        int scale = 0;
+        while (x > 1.5) { x /= E; scale++; }
+        while (x < 0.5) { x *= E; scale--; }
+
+        x = x - 1; // Taylor series around 1
+        double term = x;
+        double sum = x;
+
+        for (int i = 2; i <= 100; i++) {
+            term *= -x * (i - 1) / i;
+            sum += term;
+            if (abs(term) < 1e-10) break;
+        }
+
+        return sum + scale;
+    }
+
+    // Custom implementation of sqrt using Newton's method
+    private static double sqrt(double x) {
+        if (x < 0) throw new IllegalArgumentException("sqrt of negative number");
+        if (x == 0) return 0;
+
+        double guess = x / 2;
+        for (int i = 0; i < 10; i++) {
+            guess = (guess + x / guess) / 2;
+        }
+        return guess;
+    }
+
+    /**
+     * Returns the absolute value of a number
+     * @param x the input value
+     * @return the absolute value
+     */
+    private static double abs(double x) {
+        return x < 0 ? -x : x;
     }
 
     /*
@@ -60,7 +186,7 @@ public class FXMLController implements Initializable {
         if (numDataPoints == 0)
             throw new IllegalArgumentException("ERROR: dataset must contain at least one data point.");
         if (numDataPoints == 0)
-            return 0; //theoretical property of standard deviation 
+            return 0; //theoretical property of standard deviation
 
         // Stage #1: compute the mean of the dataset
         double sum = 0.0;
@@ -75,45 +201,9 @@ public class FXMLController implements Initializable {
             squareDeviationSum += ((data - mean) * (data - mean));
 
         // Stage #3: compute and return the standard deviation
-        double standardDeviation = squaredRoot(squareDeviationSum / numDataPoints);
+        double standardDeviation = sqrt(squareDeviationSum / numDataPoints);
         System.out.println("The Standard Deviation of the Dataset is " + standardDeviation + ".");
         return standardDeviation;
-    }
-
-    /*
-     * Auxiliary method for mathematical computations, returning the squared root of
-     * the given double (decimal) value.
-     */
-    public static double squaredRoot(double value) {
-        if (value < 0)
-            throw new IllegalArgumentException("ERROR: cannot compute the square root of a negative number.");
-        if (value == 0)
-            return 0; //theoretical property of square root
-        
-        // Initial guess for the square root, beginning at half the value
-        double guess = value / 2.0;
-
-        // Defines the tolerance level for the approximation, being nine decimal places
-        double epsilon = 1e-9;
-
-        // Employs Netwon's method for approximating the square root
-        while (absoluteValue(guess * guess - value) > epsilon)
-            guess = (guess + (value / guess)) / 2.0;
-
-        // Returns square root on condition that the difference between guess^2 and
-        // the original value is within the epsilon tolerance level.
-        return guess;
-    }
-
-    /*
-     * Auxiliary method for mathematical computations, returns the absolute value of
-     * the given double (decimal) value.
-     */
-    public static double absoluteValue(double value) {
-        if (value < 0)
-            return value * -1;
-        else
-            return value;
     }
 
     @FXML
