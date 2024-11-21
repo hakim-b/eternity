@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="278aaee9-6c31-48e8-b0f4-67a5b03ec5d7" name="Changes" comment="addded gamma function">
+    <list default="true" id="278aaee9-6c31-48e8-b0f4-67a5b03ec5d7" name="Changes" comment="removed math implementation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/FXMLController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/FXMLController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/primary.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/primary.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +42,7 @@
   "keyToString": {
     "Application.MainApp.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
@@ -102,11 +104,20 @@
       <option name="project" value="LOCAL" />
       <updated>1731461209437</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="removed math implementation">
+      <option name="closed" value="true" />
+      <created>1731818621248</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1731818621248</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="addded gamma function" />
-    <option name="LAST_COMMIT_MESSAGE" value="addded gamma function" />
+    <MESSAGE value="removed math implementation" />
+    <option name="LAST_COMMIT_MESSAGE" value="removed math implementation" />
   </component>
 </project>

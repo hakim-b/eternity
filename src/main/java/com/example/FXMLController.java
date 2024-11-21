@@ -206,10 +206,7 @@ public class FXMLController implements Initializable {
         return standardDeviation;
     }
 
-    @FXML
-    private void btnClickAction(ActionEvent event) {
-        lblOut.setText("At this age, how are there man still hatin?");
-    }
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
