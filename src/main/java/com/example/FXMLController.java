@@ -230,9 +230,6 @@ public class FXMLController implements Initializable {
             throw new IllegalArgumentException("Input must be between -1 and 1");
         }
 
-        // Approximation of PI
-        double PI = 3.1415926535897932384626433832795028841971;
-
         // Special cases
         if (x == 1.0) return 0.0;
         if (x == -1.0) return PI;
@@ -253,12 +250,6 @@ public class FXMLController implements Initializable {
 
         return result - sum;
     }
-
-
-
-
-
-
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
