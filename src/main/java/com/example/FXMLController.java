@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import java.util.ResourceBundle;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,17 +18,19 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.net.URL;
-
 import javafx.fxml.Initializable;
+import java.util.ResourceBundle;
 
 public class FXMLController implements Initializable {
 
-    @FXML // the "σ" button belonging to the main UI
-    private Button sigmaButton;
+    public String functionType = null;
 
-    // Storage structure holding the data points crucial for standard deviation calculation.
+    // Storage structure holding data points for standard deviation
+    // calculation.
     private final List<Double> dataset = new ArrayList<>();
 
+    @FXML // the "σ" button belonging to the main UI
+    private Button sigmaButton;
 
     /**
      * Handles the action when the "o" button is clicked.
@@ -35,6 +39,7 @@ public class FXMLController implements Initializable {
      */
     @FXML
     public void handleSigmaButtonAction(ActionEvent e) {
+        functionType = "σ";
         // Constructs a new window (stage) for standard deviation dataset options.
         Stage dataStage = new Stage();
         VBox layout = new VBox(10);
@@ -46,7 +51,7 @@ public class FXMLController implements Initializable {
 
         // Stage #2: File Import
         Button fileImporButton = new Button("Import from Excel");
-        fileImporButton.setOnAction(ev -> handleFileImport());
+        fileImporButton.setOnAction(ev -> handleFileImport(dataStage));
 
         layout.getChildren().addAll(manualInputButton, fileImporButton);
         Scene scene = new Scene(layout, 350, 150);
@@ -61,6 +66,7 @@ public class FXMLController implements Initializable {
      * @param parentStage
      */
     private void showManualInputPane(Stage parentStage) {
+        Stage manualInputStage = new Stage();
         VBox manualInputLayout = new VBox(10);
         manualInputLayout.setStyle("-fx-padding: 10; -fx-alignment: center;");
 
@@ -91,20 +97,28 @@ public class FXMLController implements Initializable {
                     try {
                         for (TextField field : dataFields)
                             dataset.add(Double.valueOf(Double.parseDouble(field.getText())));
+                        manualInputStage.close();
                         showAlert("Success", "Data successfully recorded!");
-                        // Proceed with standard deviation calculation using dataset.    
+
+                        // Proceed with standard deviation calculation using dataset.
+                        double[] dataArray = new double[dataset.size()];
+                        for (int i = 0; i < dataset.size(); i++)
+                            dataArray[i] = dataset.get(i);
+                        double result = standardDeviation(dataArray);
+                        String computation = "σ of loaded dataset";
+                        displayResultsWithGraph(functionType, computation, result, dataset);
+                        parentStage.close();
                     } catch (NumberFormatException exception) {
-                        showAlert("Invalid Input", "Please enter a valid number for all data points.");
+                        showError("Invalid Input", "Please enter a valid number for all data points.");
                     }
                 });
                 manualInputLayout.getChildren().add(submitButton);
             } catch (NumberFormatException exception) {
-                showAlert("Invalid Input", "Please enter a valid integer.");
+                showError("Invalid Input", "Please enter a valid integer.");
             }
         });
 
         manualInputLayout.getChildren().addAll(instructionLabel, dataPointField, confirmButton);
-        Stage manualInputStage = new Stage();
         manualInputStage.setScene(new Scene(manualInputLayout, 400, 300));
         manualInputStage.setTitle("Manual Data Input");
         manualInputStage.show();
@@ -117,33 +131,42 @@ public class FXMLController implements Initializable {
      * - the file must be in CSV format with one numerical data point per line
      * - no headers or non-numeric data should be included
      */
-    private void handleFileImport() {
-        FileChooser fileChooser = new FileChooser(); //constructs a file explorer window
+    private void handleFileImport(Stage parentStage) {
+        FileChooser fileChooser = new FileChooser(); // constructs a file explorer window
         // Restricts valid file type to just Excel
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xls", "*.xlsx"));
-        File selectedFile = fileChooser.showOpenDialog(null);
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+        File selectedFile = fileChooser.showOpenDialog(parentStage);
 
         if (selectedFile != null) {
             try (Scanner scanner = new Scanner(selectedFile)) {
-                dataset.clear(); //clear existing data
+                dataset.clear(); // clear existing data
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
                     try {
                         dataset.add(Double.valueOf(Double.parseDouble(line)));
                     } catch (NumberFormatException exception) {
-                        showAlert("Invalid Format", "The file contains invalid data, only numeric values are permitted.");
+                        showError("Invalid Format",
+                                "The file contains invalid data, only numeric values are permitted.");
                         return;
                     }
                 }
                 showAlert("Success", "Data successfully imported!");
+                // Proceed with standard deviation calculation using dataset.
+                double[] dataArray = new double[dataset.size()];
+                for (int i = 0; i < dataset.size(); i++)
+                    dataArray[i] = dataset.get(i);
+                double result = standardDeviation(dataArray);
+                String computation = "σ of loaded dataset";
+                displayResultsWithGraph(functionType, computation, result, dataset);
+                parentStage.close();
             } catch (Exception exception) {
-                showAlert("ERROR", "An error occured while reading the file.");
+                showError("ERROR", "An error occured while reading the file.");
             }
         }
     }
 
     /**
-     * Displays an alert dialog with the specified title and message.
+     * Displays a miscellaneous alert dialog with the specified title and message.
      *
      * @param title   The title of the alert dialog.
      * @param message The message content of the alert.
@@ -153,6 +176,82 @@ public class FXMLController implements Initializable {
         alert.setTitle(title);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    /**
+     * Displays an error dialog with the specified title and message.
+     *
+     * @param title   The title of the alert dialog.
+     * @param message The message content of the alert.
+     */
+    private void showError(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void displayResultsWithGraph(String functionType, String computation, double result, List<Double> dataset) {
+        Stage stage = new Stage();
+        stage.setTitle(("Computation Results & Graph"));
+
+        // Display the Equation evaluated.
+        Label computationLabel = new Label("Equation Evaluated: " + computation + " = " + result);
+        computationLabel.setStyle("-fx-font-size: 16; -fx-padding: 10;");
+
+        // Axes for Line Chart
+        NumberAxis xAxis = new NumberAxis();
+        xAxis.setLabel("Horizontal Axis");
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel("Vertical Axis");
+
+        // Line Chart
+        LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
+        lineChart.setTitle(functionType + " Function Visualization");
+
+        // Dataset Series or Function Graph
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
+        series.setName("f(x)");
+
+        if (functionType.equals("MAD") || functionType.equals("σ")) {
+            for (int i = 0; i < dataset.size(); i++)
+                series.getData().add(new XYChart.Data<>(i, dataset.get(i)));
+        } else if (functionType.equals("arccos")) {
+            for (double x = -1.0; x <= 1.0; x += 0.1) {
+                double y = arccos(x);
+                series.getData().add(new XYChart.Data<>(x, y));
+            }
+        } else if (functionType.equals("ab^x")) {
+            double a = dataset.get(0);
+            double b = dataset.get(1);
+            for (double x = -10; x <= 10; x++) {
+                double y = a * pow(b, x);
+                series.getData().add(new XYChart.Data<>(x, y));
+            }
+        } else if (functionType.equals("x^y")) {
+            double yExponent = dataset.get(0);
+            for (double x = -10; x <= 10; x++) {
+                double y = pow(x, yExponent);
+                series.getData().add(new XYChart.Data<>(x, y));
+            }
+        } else if (functionType.equals("Gamma")) {
+            for (double x = 0.5; x <= 10.0; x += 0.5) {
+                double y = gamma(x);
+                series.getData().add(new XYChart.Data<>(x, y));
+            }
+        } else if (functionType.equals("sinh")) {
+            for (double x = -10.0; x <= 10.0; x++) {
+                // double y = sinh(x);
+                // series.getData().add(new XYChart.Data<>(x, y));
+            }
+        }
+
+        lineChart.getData().add(series);
+        VBox layout = new VBox(10, computationLabel, lineChart);
+        layout.setStyle("-fx-padding: 20;");
+        Scene scene = new Scene(layout, 800, 600);
+        stage.setScene(scene);
+        stage.show();
     }
 
     public Label calcSeqLbl;
@@ -173,16 +272,15 @@ public class FXMLController implements Initializable {
         if (shouldReplaceZero(outputLabelTxt)) {
             outputLabel.setText(numInput);
 
-
-        } else  {
+        } else {
             outputLabel.setText(outputLabelTxt + numInput);
         }
     }
 
     private boolean shouldReplaceZero(String outputTxt) {
-        return (num1Stored && !num2Stored && pressedBinary) || pressedEqual || pressedUnary || Double.parseDouble(outputTxt) == 0;
+        return (num1Stored && !num2Stored && pressedBinary) || pressedEqual || pressedUnary
+                || Double.parseDouble(outputTxt) == 0;
     }
-
 
     private static final double[] p = {
             676.5203681218851,
@@ -252,7 +350,8 @@ public class FXMLController implements Initializable {
         for (int i = 1; i <= 10; i++) {
             term = -term * x * x / (2 * i * (2 * i + 1));
             sum += term;
-            if (abs(term) < 1e-10) break;
+            if (abs(term) < 1e-10)
+                break;
         }
 
         return sum;
@@ -271,7 +370,8 @@ public class FXMLController implements Initializable {
         for (int i = 1; i <= 100; i++) {
             term *= x / i;
             sum += term;
-            if (abs(term) < 1e-10) break;
+            if (abs(term) < 1e-10)
+                break;
         }
 
         return sum;
@@ -286,15 +386,18 @@ public class FXMLController implements Initializable {
      */
     private static double pow(double base, double exponent) {
         // Handle special cases
-        if (exponent == 0) return 1;
-        if (base == 0) return 0;
+        if (exponent == 0)
+            return 1;
+        if (base == 0)
+            return 0;
 
         // Handle integer exponents more efficiently
         if (floor(exponent) == exponent) {
             double result = 1;
             long exp = (long) abs(exponent);
             while (exp > 0) {
-                if ((exp & 1) == 1) result *= base;
+                if ((exp & 1) == 1)
+                    result *= base;
                 base *= base;
                 exp >>= 1;
             }
@@ -307,7 +410,8 @@ public class FXMLController implements Initializable {
 
     // Custom implementation of natural logarithm using Taylor series
     private static double ln(double x) {
-        if (x <= 0) throw new IllegalArgumentException("ln(x) is undefined for x <= 0");
+        if (x <= 0)
+            throw new IllegalArgumentException("ln(x) is undefined for x <= 0");
 
         // Scale x to [0.5, 1.5] for better convergence
         int scale = 0;
@@ -327,7 +431,8 @@ public class FXMLController implements Initializable {
         for (int i = 2; i <= 100; i++) {
             term *= -x * (i - 1) / i;
             sum += term;
-            if (abs(term) < 1e-10) break;
+            if (abs(term) < 1e-10)
+                break;
         }
 
         return sum + scale;
@@ -335,8 +440,10 @@ public class FXMLController implements Initializable {
 
     // Custom implementation of sqrt using Newton's method
     private static double sqrt(double x) {
-        if (x < 0) throw new IllegalArgumentException("sqrt of negative number");
-        if (x == 0) return 0;
+        if (x < 0)
+            throw new IllegalArgumentException("sqrt of negative number");
+        if (x == 0)
+            return 0;
 
         double guess = x / 2;
         for (int i = 0; i < 10; i++) {
@@ -365,7 +472,7 @@ public class FXMLController implements Initializable {
         if (numDataPoints == 0)
             throw new IllegalArgumentException("ERROR: dataset must contain at least one data point.");
         if (numDataPoints == 0)
-            return 0; //theoretical property of standard deviation
+            return 0; // theoretical property of standard deviation
 
         // Stage #1: compute the mean of the dataset
         double sum = 0.0;
@@ -386,18 +493,24 @@ public class FXMLController implements Initializable {
     }
 
     /**
-     * Calculates the arccosine (inverse cosine) of a value using Taylor series expansion.
-     * This implementation uses the relationship arccos(x) = π/2 - arcsin(x) and calculates
+     * Calculates the arccosine (inverse cosine) of a value using Taylor series
+     * expansion.
+     * This implementation uses the relationship arccos(x) = π/2 - arcsin(x) and
+     * calculates
      * arcsin(x) using its Taylor series.
      *
-     * @param x The value whose arccosine is to be calculated. Must be between -1 and 1 inclusive.
+     * @param x The value whose arccosine is to be calculated. Must be between -1
+     *          and 1 inclusive.
      * @return The arccosine of x in radians, in the range [0, π]
      * @throws IllegalArgumentException if x is outside the domain [-1, 1]
      *                                  <p>
      *                                  Accuracy note:
-     *                                  - The function uses 20 terms of the Taylor series for approximation
-     *                                  - Most accurate near 0, may lose some precision near -1 and 1
-     *                                  - Typical accuracy is within 10^-10 of the true value for |x| < 0.9
+     *                                  - The function uses 20 terms of the Taylor
+     *                                  series for approximation
+     *                                  - Most accurate near 0, may lose some
+     *                                  precision near -1 and 1
+     *                                  - Typical accuracy is within 10^-10 of the
+     *                                  true value for |x| < 0.9
      *                                  <p>
      *                                  Examples:
      *                                  arccos(1.0) = 0.0
@@ -410,8 +523,10 @@ public class FXMLController implements Initializable {
         }
 
         // Special cases
-        if (x == 1.0) return 0.0;
-        if (x == -1.0) return PI;
+        if (x == 1.0)
+            return 0.0;
+        if (x == -1.0)
+            return PI;
 
         // arccos(x) = π/2 - arcsin(x)
         // arcsin(x) can be calculated using the formula:

@@ -34,11 +34,10 @@
 
     <GridPane AnchorPane.leftAnchor="5" AnchorPane.topAnchor="200">
         <!-- Row 0 -->
-
-        <Button text="\%" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <Button text="CE" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-        <Button text="C" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-        <Button text="⌫" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+        <Button text="\%" GridPane.columnIndex="0" GridPane.rowIndex="0" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;"/>
+        <Button text="CE" GridPane.columnIndex="1" GridPane.rowIndex="0" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;"/>
+        <Button text="C" GridPane.columnIndex="2" GridPane.rowIndex="0" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;"/>
+        <Button text="⌫" GridPane.columnIndex="3" GridPane.rowIndex="0" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black; -fx-background-color: orange;"/>
 
         <!-- Row 1 -->
          <Button text="1/x" GridPane.columnIndex="0" GridPane.rowIndex="1" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
