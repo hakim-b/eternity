@@ -22,7 +22,16 @@ import javafx.fxml.Initializable;
 import java.util.ResourceBundle;
 
 public class FXMLController implements Initializable {
+    public Label calcSeqLbl;
+    public Label outputLabel;
 
+    private boolean pressedBinary, pressedUnary, pressedEqual;
+    private boolean num1Stored, num2Stored;
+
+    private double num1, num2;
+    private String binaryOperator;
+
+    // Identifies the special function chosen.
     public String functionType = null;
 
     // Storage structure holding data points for standard deviation
@@ -191,6 +200,15 @@ public class FXMLController implements Initializable {
         alert.showAndWait();
     }
 
+    /**
+     * Displays both the result of the evaluated equation and accompanying graphical
+     * visualization.
+     * 
+     * @param functionType
+     * @param computation
+     * @param result
+     * @param dataset
+     */
     private void displayResultsWithGraph(String functionType, String computation, double result, List<Double> dataset) {
         Stage stage = new Stage();
         stage.setTitle(("Computation Results & Graph"));
@@ -254,14 +272,30 @@ public class FXMLController implements Initializable {
         stage.show();
     }
 
-    public Label calcSeqLbl;
-    public Label outputLabel;
+    @FXML
+    private void handleLogBtnClick(ActionEvent event) {
+        
+    }
 
-    private boolean pressedBinary, pressedUnary, pressedEqual;
-    private boolean num1Stored, num2Stored;
+    @FXML
+    private void handleMADBtnClick(ActionEvent event) {
 
-    private double num1, num2;
-    private String binaryOperator;
+    }
+
+    @FXML
+    private void handleExponentialBtnClick(ActionEvent event) {
+
+    }
+
+    @FXML
+    private void handleCartesianProductBtnClick(ActionEvent event) {
+
+    }
+
+    @FXML
+    private void handleArcCosBtnClick(ActionEvent event) {
+
+    }
 
     @FXML
     private void handleNumberBtnClick(ActionEvent event) {
@@ -391,7 +425,8 @@ public class FXMLController implements Initializable {
         if (base == 0)
             return 0;
 
-        if (exponent < 0) return 1 / pow(base, -exponent); // Handle negative exponents
+        if (exponent < 0)
+            return 1 / pow(base, -exponent); // Handle negative exponents
 
         // Handle integer exponents more efficiently
         if (floor(exponent) == exponent) {
