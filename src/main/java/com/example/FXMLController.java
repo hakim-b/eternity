@@ -1,18 +1,155 @@
 package com.example;
-/*
-Put header here
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
- */
-
-import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
 
 public class FXMLController implements Initializable {
+
+    @FXML // the "σ" button belonging to the main UI
+    private Button sigmaButton;
+
+    // Storage structure holding the data points crucial for standard deviation calculation.
+    private List<Double> dataset = new ArrayList<>();
+
+
+    /**
+     * Handles the action when the "o" button is clicked.
+     * @param e
+     */
+    @FXML
+    public void handleSigmaButtonAction(ActionEvent e) {
+        // Constructs a new window (stage) for standard deviation dataset options.
+        Stage dataStage = new Stage();
+        VBox layout = new VBox(10);
+        layout.setStyle("-fx-padding: 10; -fx-alignment: center;");
+
+        // Option #1: Manual Input
+        Button manualInputButton = new Button("Manual Input");
+        manualInputButton.setOnAction(ev -> showManualInputPane(dataStage));
+
+        // Stage #2: File Import
+        Button fileImporButton = new Button("Import from Excel");
+        fileImporButton.setOnAction(ev -> handleFileImport());
+        
+        layout.getChildren().addAll(manualInputButton,fileImporButton);
+        Scene scene = new Scene(layout, 300, 150);
+        dataStage.setTitle("Standard Deviaton Wizard!");
+        dataStage.setScene(scene);
+        dataStage.show();
+    }
+
+    /**
+     * Displays a dedicated pane for manual data input.
+     * @param parentStage
+     */
+    private void showManualInputPane(Stage parentStage) {
+        VBox manualInputLayout = new VBox(10);
+        manualInputLayout.setStyle("-fx-padding: 10; -fx-alignment: center;");
+
+        Label instructionLabel = new Label("Enter number of data points:");
+        TextField dataPointField = new TextField();
+        Button confirmButton = new Button("Confirm");
+
+        confirmButton.setOnAction(e -> {
+            try {
+                int count = Integer.parseInt(dataPointField.getText());
+                manualInputLayout.getChildren().clear();
+
+                // Storage structure for holding text fields for data entries.
+                ArrayList<TextField> dataFields = new ArrayList<>();
+                
+                // Creates text fields for each data entry.
+                for (int i = 0; i < count; i++){
+                    TextField dataField = new TextField();
+                    dataField.setPromptText("Data Point " + (i + 1));
+                    dataFields.add(dataField);
+                    manualInputLayout.getChildren().add(dataField);
+                }
+
+                // Button to submit the data points.
+                Button submitButton = new Button("Submit Data");
+                submitButton.setOnAction(ev -> {
+                    dataset.clear(); // clears existing data
+                    try{
+                        for (TextField field : dataFields) 
+                            dataset.add(Double.parseDouble(field.getText()));
+                        showAlert("Success", "Data successfully recorded!");
+                        // Proceed with standard deviation calculation using dataset.    
+                        } catch (NumberFormatException exception) {
+                            showAlert("Invalid Input", "Please enter a valid number for all data points.");
+                        }
+                    });
+                    manualInputLayout.getChildren().add(submitButton);
+            } catch (NumberFormatException exception) {
+                showAlert("Invalid Input", "Please enter a valid integer.");
+            }
+        }); 
+
+        manualInputLayout.getChildren().addAll(instructionLabel, dataPointField, confirmButton);
+        Stage manualInputStage = new Stage();
+        manualInputStage.setScene(new Scene(manualInputLayout, 400, 300));
+        manualInputStage.setTitle("Manual Data Input");
+        manualInputStage.show();
+    }
+
+    /**
+     * Handles importing data from an Excel file option.
+     * 
+     * [Formatting Rules for Excel File]:
+     * - the file must be in CSV format with one numerical data point per line
+     * - no headers or non-numeric data should be included
+     */
+    private void handleFileImport() {
+        FileChooser fileChooser = new FileChooser(); //constructs a file explorer window
+        // Restricts valid file type to just Excel
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xls", "*.xlsx"));
+        File selectedFile = fileChooser.showOpenDialog(null);
+
+        if (selectedFile != null){
+            try (Scanner scanner = new Scanner(selectedFile)) {
+                dataset.clear(); //clear existing data
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    try {
+                        dataset.add(Double.parseDouble(line));
+                    } catch (NumberFormatException exception) {
+                        showAlert("Invalid Format", "The file contains invalid data, only numeric values are permitted.");
+                        return;
+                    }
+                }
+                showAlert("Success", "Data successfully imported!");
+            } catch (Exception exception) {
+                showAlert("ERROR", "An error occured while reading the file.");
+            }
+        }
+    }
+
+    /**
+     * Displays an alert dialog with the specified title and message.
+     *
+     * @param title   The title of the alert dialog.
+     * @param message The message content of the alert.
+     */
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
     public Label calcSeqLbl;
     public Label outputLabel;

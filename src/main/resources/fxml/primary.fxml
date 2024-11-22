@@ -1,61 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="560" prefWidth="435" xmlns:fx="http://javafx.com/fxml/1"
-            xmlns="http://javafx.com/javafx/10.0.2-internal" fx:controller="com.example.FXMLController">
+<AnchorPane id="AnchorPane" prefHeight="560" prefWidth="435" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.FXMLController">
+   <VBox layoutY="-1.0" prefHeight="193.0" prefWidth="435.0" style="-fx-background-color: black; -fx-border-color: gray; -fx-border-width: 5;">
+      <children>
+         <VBox prefHeight="200.0" prefWidth="100.0" />
+      </children>
+   </VBox>
 
     <!-- Calculation Sequence label-->
-    <Label fx:id="calcSeqLbl" AnchorPane.topAnchor="40" AnchorPane.leftAnchor="7"/>
+    <Label fx:id="calcSeqLbl" prefWidth="30.0" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="40.0" />
 
-    <!-- output label -->
-    <Label fx:id="outputLabel" text="0" AnchorPane.topAnchor="90" AnchorPane.leftAnchor="7"/>
+                <!-- output label -->
+    <Label fx:id="outputLabel" layoutX="100.0" text="0" textFill="#f8f8f8" AnchorPane.leftAnchor="7" AnchorPane.topAnchor="90">
+      <font>
+         <Font size="30.0" />
+      </font>
+      <padding>
+         <Insets left="20.0" />
+      </padding>
+   </Label>
 
     <!-- Calculator Grid buttons -->
 
-    <GridPane AnchorPane.topAnchor="200" AnchorPane.leftAnchor="5">
+    <GridPane AnchorPane.leftAnchor="5" AnchorPane.topAnchor="200">
         <!-- Row 0 -->
 
-        <Button text="\%" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-        <Button text="CE" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-        <Button text="C" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-        <Button text="⌫" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+        <Button text="\%" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Button text="CE" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Button text="C" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+        <Button text="⌫" GridPane.columnIndex="3" GridPane.rowIndex="0" />
 
         <!-- Row 1 -->
 
-        <Button text="1/x" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-        <Button text="x^2" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-        <Button text="√x" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-        <Button text="/" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+        <Button text="1/x" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <Button text="x^2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Button text="√x" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        <Button text="/" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
         <!-- Row 2 -->
 
-        <Button text="7" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-        <Button text="8" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-        <Button text="9" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-        <Button text="*" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+        <Button text="7" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Button text="8" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Button text="9" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+        <Button text="*" GridPane.columnIndex="3" GridPane.rowIndex="2" />
 
         <!-- Row 3 -->
 
-        <Button text="4" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-        <Button text="5" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-        <Button text="6" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
-        <Button text="-" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+        <Button text="4" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <Button text="5" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <Button text="6" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+        <Button text="-" GridPane.columnIndex="3" GridPane.rowIndex="3" />
 
         <!-- Row 4 -->
 
-        <Button text="1" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-        <Button text="2" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-        <Button text="3" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
-        <Button text="+" GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+        <Button text="1" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <Button text="2" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <Button text="3" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+        <Button text="+" GridPane.columnIndex="3" GridPane.rowIndex="4" />
 
         <!-- Row 5 -->
 
-        <Button text="+/-" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-        <Button text="0" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-        <Button text="." GridPane.columnIndex="2" GridPane.rowIndex="5"/>
-        <Button text="=" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+        <Button text="+/-" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <Button text="0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+        <Button text="." GridPane.columnIndex="2" GridPane.rowIndex="5" />
+        <Button text="=" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+      <columnConstraints>
+         <ColumnConstraints />
+         <ColumnConstraints />
+         <ColumnConstraints />
+         <ColumnConstraints />
+      </columnConstraints>
+      <rowConstraints>
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+      </rowConstraints>
     </GridPane>
 
 </AnchorPane>
