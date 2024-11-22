@@ -124,6 +124,8 @@ public class FXMLController implements Initializable {
                 manualInputLayout.getChildren().add(submitButton);
             } catch (NumberFormatException exception) {
                 showError("Invalid Input", "Please enter a valid integer.");
+            } catch (RuntimeException exception) {
+                showError(exception.getClass().getSimpleName(), exception.getMessage());
             }
         });
 
@@ -157,6 +159,8 @@ public class FXMLController implements Initializable {
                         showError("Invalid Format",
                                 "The file contains invalid data, only numeric values are permitted.");
                         return;
+                    } catch (RuntimeException exception) {
+                        showError(exception.getClass().getSimpleName(), exception.getMessage());
                     }
                 }
                 showAlert("Success", "Data successfully imported!");
@@ -169,7 +173,7 @@ public class FXMLController implements Initializable {
                 displayResultsWithGraph(functionType, computation, result, dataset);
                 parentStage.close();
             } catch (Exception exception) {
-                showError("ERROR", "An error occured while reading the file.");
+                showError(exception.getClass().getSimpleName(), exception.getMessage());
             }
         }
     }
@@ -234,7 +238,7 @@ public class FXMLController implements Initializable {
         if (functionType.equals("MAD") || functionType.equals("σ")) {
             for (int i = 0; i < dataset.size(); i++)
                 series.getData().add(new XYChart.Data<>(i, dataset.get(i)));
-        } else if (functionType.equals("arccos")) {
+        } else if (functionType.equals("arccos(x)")) {
             for (double x = -1.0; x <= 1.0; x += 0.1) {
                 double y = arccos(x);
                 series.getData().add(new XYChart.Data<>(x, y));
@@ -267,14 +271,28 @@ public class FXMLController implements Initializable {
         lineChart.getData().add(series);
         VBox layout = new VBox(10, computationLabel, lineChart);
         layout.setStyle("-fx-padding: 20;");
-        Scene scene = new Scene(layout, 800, 600);
+        Scene scene = new Scene(layout, 700, 400);
         stage.setScene(scene);
         stage.show();
     }
 
     @FXML
     private void handleLogBtnClick(ActionEvent event) {
-        
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Logarithmic Function");
+        dialog.setHeaderText("Compute Logb(x)");
+        dialog.setContentText("Enter the value (x): ");
+        dialog.showAndWait().ifPresent(input -> {
+            try {
+                double x = Double.parseDouble(input);
+                double result = 0;
+                // Awaiting implementation...
+            } catch (NumberFormatException exception) {
+                showError("NUMBER FORMAT ERROR", "Invalid input. Please enter a numeric value.");
+            } catch (RuntimeException exception) {
+                showError(exception.getClass().getSimpleName(), exception.getMessage());
+            }
+        });
     }
 
     @FXML
@@ -282,19 +300,135 @@ public class FXMLController implements Initializable {
 
     }
 
+    /**
+     * Handles the action when the "ab^x" button is clicked.
+     * @param event
+     */
     @FXML
     private void handleExponentialBtnClick(ActionEvent event) {
+        dataset.clear();
+        // Prompt user for the parameter 'a'
+        TextInputDialog aDialog = new TextInputDialog();
+        aDialog.setTitle("Exponential Function");
+        aDialog.setHeaderText("Compute ab^x");
+        aDialog.setContentText("Enter the value of 'a':");
 
+        // Prompt user for the parameter 'b'
+        TextInputDialog bDialog = new TextInputDialog();
+        bDialog.setTitle("Exponential Function");
+        bDialog.setHeaderText("Compute ab^x");
+        bDialog.setContentText("Enter the value of 'b':");
+
+        // Prompt user for the parameter 'x'
+        TextInputDialog xDialog = new TextInputDialog();
+        xDialog.setTitle("Exponential Function");
+        xDialog.setHeaderText("Compute ab^x");
+        xDialog.setContentText("Enter the value of 'x':");
+
+        aDialog.showAndWait().ifPresent(aInput -> {
+            try {
+                double a = Double.parseDouble(aInput);
+                bDialog.showAndWait().ifPresent(bInput -> {
+                    try {
+                        double b = Double.parseDouble(bInput);
+                        xDialog.showAndWait().ifPresent(xInput -> {
+                            try {
+                                double x = Double.parseDouble(xInput);
+                                double result = a * pow(b, x);
+                                String equation = "(" + a + ")(" + b + ")^(" + x + ")";
+                                dataset.add(a);
+                                dataset.add(b);
+                                displayResultsWithGraph("ab^x", equation, result, dataset);
+                                dataset.clear();
+                            } catch (NumberFormatException exception) {
+                                showError("NUMBER FORMAT ERROR", "Invalid 'x' value. Please enter a numeric value.");
+                            } catch (RuntimeException exception) {
+                                showError(exception.getClass().getSimpleName(), exception.getMessage());
+                            }
+                        });
+                    } catch (NumberFormatException exception) {
+                        showError("NUMBER FORMAT ERROR", "Invalid 'b' value. Please enter a numeric value.");
+                    } catch (RuntimeException exception) {
+                        showError(exception.getClass().getSimpleName(), exception.getMessage());
+                    }
+                });
+            } catch (NumberFormatException exception) {
+                showError("NUMBER FORMAT ERROR", "Invalid 'a' value. Please enter a numeric value.");
+            } catch (RuntimeException exception) {
+                showError(exception.getClass().getSimpleName(), exception.getMessage());
+            }
+        });
     }
 
+    /**
+     * Handles the action when the "x^y" button is clicked.
+     * @param event
+     */
     @FXML
     private void handleCartesianProductBtnClick(ActionEvent event) {
+        dataset.clear();
+        // Prompt user for base "x"
+        TextInputDialog baseDialog = new TextInputDialog();
+        baseDialog.setTitle("Power Function");
+        baseDialog.setHeaderText("Compute x^y");
+        baseDialog.setContentText("Enter the base (x):");
 
+        // Prompt user for exponent "y"
+        TextInputDialog exponentDialog = new TextInputDialog();
+        exponentDialog.setTitle("Power Function");
+        exponentDialog.setHeaderText("Compute x^y");
+        exponentDialog.setContentText("Enter the exponent (y):");
+
+        baseDialog.showAndWait().ifPresent(baseInput -> {
+            try { 
+                double base = Double.parseDouble(baseInput);
+                exponentDialog.showAndWait().ifPresent(expInput -> {
+                    try {
+                        double exponent = Double.parseDouble(expInput);
+                        double result = pow(base,exponent);
+                        dataset.add(base);
+                        dataset.add(exponent);
+                        String equation = "(" + base + ")^(" + exponent + ")";
+                        displayResultsWithGraph("x^y", equation, result, dataset);
+                    } catch (NumberFormatException exception) {
+                        showError("NUMBER FORMAT ERROR", "Invalid exponent. Please enter a numeric value.");
+                    } catch (RuntimeException exception) {
+                        showError(exception.getClass().getSimpleName(), exception.getMessage());
+                    }
+                });
+            } catch (NumberFormatException exception) {
+                showError("NUMBER FORMAT ERROR", "Invalid base. Please enter a numeric value.");
+            } catch (RuntimeException exception) {
+                showError(exception.getClass().getSimpleName(), exception.getMessage());
+            } 
+        });
     }
 
+    /**
+     * Handles the action when the "arccos(x)" button is clicked.
+     * @param event
+     */
     @FXML
     private void handleArcCosBtnClick(ActionEvent event) {
+        dataset.clear();
+        // Prompt user for "x"
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Arccosine Function");
+        dialog.setHeaderText("Compute arccos(x)");
+        dialog.setContentText("Enter the value (x):");
 
+        dialog.showAndWait().ifPresent(input -> {
+            try {
+                double x = Double.parseDouble(input);
+                String equation = "arccos(" + x + ")";
+                double result = arccos(x);
+                displayResultsWithGraph("arccos(x)", equation, result, null);
+            } catch (NumberFormatException exception) {
+                showError("NUMBER FORMAT ERROR", "Invalid value. Please enter a numeric value.");
+            } catch (RuntimeException exception) {
+                showError(exception.getClass().getSimpleName(), exception.getMessage());
+            }
+        });
     }
 
     @FXML
