@@ -275,26 +275,63 @@ public class FXMLController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+    
 
+    /**
+     * Handles the action when the "Logarithmic Function" button is clicked.
+     * This method prompts the user for a value (x) and a base (b),
+     * computes the logarithm of x to the base b using the logb function,
+     * and displays the result and visualization.
+     *
+     * @param event The event triggered by clicking the "Log" button.
+     */
     @FXML
     private void handleLogBtnClick(ActionEvent event) {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Logarithmic Function");
-        dialog.setHeaderText("Compute Logb(x)");
-        dialog.setContentText("Enter the value (x): ");
-        dialog.showAndWait().ifPresent(input -> {
+        // Prompt the user to input the value of x
+        TextInputDialog xDialog = new TextInputDialog();
+        xDialog.setTitle("Logarithmic Function");
+        xDialog.setHeaderText("Compute logb(x)");
+        xDialog.setContentText("Enter the value (x): ");
+
+        // Prompt the user to input the base b
+        TextInputDialog bDialog = new TextInputDialog();
+        bDialog.setTitle("Logarithmic Function");
+        bDialog.setHeaderText("Compute logb(x)");
+        bDialog.setContentText("Enter the base (b):");
+
+        // Show dialog for x and process input
+        xDialog.showAndWait().ifPresent(xInput -> {
             try {
-                double x = Double.parseDouble(input);
-                double result = 0;
-                // Awaiting implementation...
+                // Parse the input for x
+                double x = Double.parseDouble(xInput);
+                // Show dialog for b and process input
+                bDialog.showAndWait().ifPresent(bInput -> {
+                    try {
+                        double b = Double.parseDouble(bInput);
+                        // Compute logb(x) using the custom logb function
+                        double result = logb(x, b);
+                        String equation = "log_" + b + "(" + x + ")";
+                        // Display the results with optional graph visualization
+                        displayResultsWithGraph("logb(x)", equation, result, null);
+                    } catch (NumberFormatException exception) {
+                        // Handle invalid numeric input for b
+                        showError("NUMBER FORMAT ERROR", "Invalid base. Please enter a numeric value.");
+                    } catch (IllegalArgumentException exception) {
+                        // Handle invalid values for b (e.g., b <= 0 or b == 1)
+                        showError("INVALID INPUT", exception.getMessage());
+                    }
+                });
             } catch (NumberFormatException exception) {
-                showError("NUMBER FORMAT ERROR", "Invalid input. Please enter a numeric value.");
-            } catch (RuntimeException exception) {
-                showError(exception.getClass().getSimpleName(), exception.getMessage());
+                // Handle invalid numeric input for x
+                showError("NUMBER FORMAT ERROR", "Invalid value for x. Please enter a numeric value.");
+            } catch (IllegalArgumentException exception) {
+                // Handle invalid values for x (e.g., x <= 0)
+                showError("INVALID INPUT", exception.getMessage());
             }
         });
     }
 
+    
     @FXML
     private void handleMADBtnClick(ActionEvent event) {
 
@@ -638,6 +675,27 @@ public class FXMLController implements Initializable {
         return x < 0 ? -x : x;
     }
 
+    /**
+     * Computes the logarithm of x to the base b using the existing ln function.
+     * 
+     * @param x The value for which the logarithm is calculated. Must be greater than 0.
+     * @param b The base of the logarithm. Must be greater than 0 and not equal to 1.
+     * @return The logarithm of x to the base b.
+     * @throws IllegalArgumentException if x <= 0, b <= 0, or b == 1.
+     */
+    private static double logb(double x, double b) {
+        if (x <= 0) {
+            throw new IllegalArgumentException("The argument x must be greater than 0.");
+        }
+
+        if (b <= 0 || b == 1) {
+            throw new IllegalArgumentException("The base b must be greater than 0 and not equal to 1.");
+        }
+        
+        return ln(x) / ln(b); 
+    }
+
+    
     /**
      * Computes the standard deviation given a dataset of double (decimal) values.
      * Note: dataset parameter must be extracted elsewhere, users are not prompted
