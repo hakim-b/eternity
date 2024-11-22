@@ -46,7 +46,7 @@ public class FXMLController implements Initializable {
         fileImporButton.setOnAction(ev -> handleFileImport());
         
         layout.getChildren().addAll(manualInputButton,fileImporButton);
-        Scene scene = new Scene(layout, 300, 150);
+        Scene scene = new Scene(layout, 350, 150);
         dataStage.setTitle("Standard Deviaton Wizard!");
         dataStage.setScene(scene);
         dataStage.show();

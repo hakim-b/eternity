@@ -41,11 +41,11 @@
         <Button text="⌫" GridPane.columnIndex="3" GridPane.rowIndex="0" />
 
         <!-- Row 1 -->
+
         <Button text="1/x" GridPane.columnIndex="0" GridPane.rowIndex="1" />
         <Button text="x^2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
         <Button text="√x" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-        <Button text="/" GridPane.columnIndex="3" GridPane.rowIndex="1" />        
-        <Button text="σ" fx:id="sigmaButton" GridPane.columnIndex="4" GridPane.rowIndex="1" onAction="#handleSigmaButtonAction" />
+        <Button text="/" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
         <!-- Row 2 -->
 
@@ -89,4 +89,5 @@
          <RowConstraints />
       </rowConstraints>
     </GridPane>
+
 </AnchorPane>
