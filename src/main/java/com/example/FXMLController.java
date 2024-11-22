@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import java.util.ResourceBundle;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -13,8 +14,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 import java.net.URL;
-import java.util.ResourceBundle;
+
 import javafx.fxml.Initializable;
 
 public class FXMLController implements Initializable {
@@ -23,11 +25,12 @@ public class FXMLController implements Initializable {
     private Button sigmaButton;
 
     // Storage structure holding the data points crucial for standard deviation calculation.
-    private List<Double> dataset = new ArrayList<>();
+    private final List<Double> dataset = new ArrayList<>();
 
 
     /**
      * Handles the action when the "o" button is clicked.
+     *
      * @param e
      */
     @FXML
@@ -44,8 +47,8 @@ public class FXMLController implements Initializable {
         // Stage #2: File Import
         Button fileImporButton = new Button("Import from Excel");
         fileImporButton.setOnAction(ev -> handleFileImport());
-        
-        layout.getChildren().addAll(manualInputButton,fileImporButton);
+
+        layout.getChildren().addAll(manualInputButton, fileImporButton);
         Scene scene = new Scene(layout, 350, 150);
         dataStage.setTitle("Standard Deviaton Wizard!");
         dataStage.setScene(scene);
@@ -54,6 +57,7 @@ public class FXMLController implements Initializable {
 
     /**
      * Displays a dedicated pane for manual data input.
+     *
      * @param parentStage
      */
     private void showManualInputPane(Stage parentStage) {
@@ -71,9 +75,9 @@ public class FXMLController implements Initializable {
 
                 // Storage structure for holding text fields for data entries.
                 ArrayList<TextField> dataFields = new ArrayList<>();
-                
+
                 // Creates text fields for each data entry.
-                for (int i = 0; i < count; i++){
+                for (int i = 0; i < count; i++) {
                     TextField dataField = new TextField();
                     dataField.setPromptText("Data Point " + (i + 1));
                     dataFields.add(dataField);
@@ -84,20 +88,20 @@ public class FXMLController implements Initializable {
                 Button submitButton = new Button("Submit Data");
                 submitButton.setOnAction(ev -> {
                     dataset.clear(); // clears existing data
-                    try{
-                        for (TextField field : dataFields) 
-                            dataset.add(Double.parseDouble(field.getText()));
+                    try {
+                        for (TextField field : dataFields)
+                            dataset.add(Double.valueOf(Double.parseDouble(field.getText())));
                         showAlert("Success", "Data successfully recorded!");
                         // Proceed with standard deviation calculation using dataset.    
-                        } catch (NumberFormatException exception) {
-                            showAlert("Invalid Input", "Please enter a valid number for all data points.");
-                        }
-                    });
-                    manualInputLayout.getChildren().add(submitButton);
+                    } catch (NumberFormatException exception) {
+                        showAlert("Invalid Input", "Please enter a valid number for all data points.");
+                    }
+                });
+                manualInputLayout.getChildren().add(submitButton);
             } catch (NumberFormatException exception) {
                 showAlert("Invalid Input", "Please enter a valid integer.");
             }
-        }); 
+        });
 
         manualInputLayout.getChildren().addAll(instructionLabel, dataPointField, confirmButton);
         Stage manualInputStage = new Stage();
@@ -108,7 +112,7 @@ public class FXMLController implements Initializable {
 
     /**
      * Handles importing data from an Excel file option.
-     * 
+     * <p>
      * [Formatting Rules for Excel File]:
      * - the file must be in CSV format with one numerical data point per line
      * - no headers or non-numeric data should be included
@@ -119,13 +123,13 @@ public class FXMLController implements Initializable {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xls", "*.xlsx"));
         File selectedFile = fileChooser.showOpenDialog(null);
 
-        if (selectedFile != null){
+        if (selectedFile != null) {
             try (Scanner scanner = new Scanner(selectedFile)) {
                 dataset.clear(); //clear existing data
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
                     try {
-                        dataset.add(Double.parseDouble(line));
+                        dataset.add(Double.valueOf(Double.parseDouble(line)));
                     } catch (NumberFormatException exception) {
                         showAlert("Invalid Format", "The file contains invalid data, only numeric values are permitted.");
                         return;
@@ -154,6 +158,31 @@ public class FXMLController implements Initializable {
     public Label calcSeqLbl;
     public Label outputLabel;
 
+    private boolean pressedBinary, pressedUnary, pressedEqual;
+    private boolean num1Stored, num2Stored;
+
+    private double num1, num2;
+    private String binaryOperator;
+
+    @FXML
+    private void handleNumberBtnClick(ActionEvent event) {
+        Button btn = (Button) event.getSource();
+        String numInput = btn.getText();
+        String outputLabelTxt = outputLabel.getText();
+
+        if (shouldReplaceZero(outputLabelTxt)) {
+            outputLabel.setText(numInput);
+
+
+        } else  {
+            outputLabel.setText(outputLabelTxt + numInput);
+        }
+    }
+
+    private boolean shouldReplaceZero(String outputTxt) {
+        return (num1Stored && !num2Stored && pressedBinary) || pressedEqual || pressedUnary || Double.parseDouble(outputTxt) == 0;
+    }
+
 
     private static final double[] p = {
             676.5203681218851,
@@ -172,6 +201,7 @@ public class FXMLController implements Initializable {
 
     /**
      * Computes the gamma of a number
+     *
      * @param x the input number
      * @return the computed value
      */
@@ -197,6 +227,7 @@ public class FXMLController implements Initializable {
 
     /**
      * Returns the floor of a number
+     *
      * @param x the input number
      * @return the floored result
      */
@@ -207,6 +238,7 @@ public class FXMLController implements Initializable {
 
     /**
      * Computed the sin value of a real number
+     *
      * @param x the input number
      * @return the computed sin value
      */
@@ -228,6 +260,7 @@ public class FXMLController implements Initializable {
 
     /**
      * Computes e^x
+     *
      * @param x the input exponent
      * @return the computed value
      */
@@ -246,7 +279,8 @@ public class FXMLController implements Initializable {
 
     /**
      * Computes the value of a base raised to an exponent
-     * @param base the input base
+     *
+     * @param base     the input base
      * @param exponent the input exponent
      * @return the computed value
      */
@@ -277,8 +311,14 @@ public class FXMLController implements Initializable {
 
         // Scale x to [0.5, 1.5] for better convergence
         int scale = 0;
-        while (x > 1.5) { x /= E; scale++; }
-        while (x < 0.5) { x *= E; scale--; }
+        while (x > 1.5) {
+            x /= E;
+            scale++;
+        }
+        while (x < 0.5) {
+            x *= E;
+            scale--;
+        }
 
         x = x - 1; // Taylor series around 1
         double term = x;
@@ -307,6 +347,7 @@ public class FXMLController implements Initializable {
 
     /**
      * Returns the absolute value of a number
+     *
      * @param x the input value
      * @return the absolute value
      */
@@ -352,16 +393,16 @@ public class FXMLController implements Initializable {
      * @param x The value whose arccosine is to be calculated. Must be between -1 and 1 inclusive.
      * @return The arccosine of x in radians, in the range [0, π]
      * @throws IllegalArgumentException if x is outside the domain [-1, 1]
-     *
-     * Accuracy note:
-     * - The function uses 20 terms of the Taylor series for approximation
-     * - Most accurate near 0, may lose some precision near -1 and 1
-     * - Typical accuracy is within 10^-10 of the true value for |x| < 0.9
-     *
-     * Examples:
-     * arccos(1.0) = 0.0
-     * arccos(0.0) = π/2
-     * arccos(-1.0) = π
+     *                                  <p>
+     *                                  Accuracy note:
+     *                                  - The function uses 20 terms of the Taylor series for approximation
+     *                                  - Most accurate near 0, may lose some precision near -1 and 1
+     *                                  - Typical accuracy is within 10^-10 of the true value for |x| < 0.9
+     *                                  <p>
+     *                                  Examples:
+     *                                  arccos(1.0) = 0.0
+     *                                  arccos(0.0) = π/2
+     *                                  arccos(-1.0) = π
      */
     public static double arccos(double x) {
         if (x < -1 || x > 1) {
@@ -376,7 +417,7 @@ public class FXMLController implements Initializable {
         // arcsin(x) can be calculated using the formula:
         // arcsin(x) = x + (1/2)(x³/3) + (1·3)/(2·4)(x⁵/5) + (1·3·5)/(2·4·6)(x⁷/7) + ...
 
-        double result = PI/2;
+        double result = PI / 2;
         double term = x;
         double sum = term;
 

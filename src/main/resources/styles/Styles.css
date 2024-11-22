@@ -1,0 +1,49 @@
+* {
+    -fx-text-fill: #fff;
+}
+
+.root {
+    -fx-background-color: #000;
+}
+
+/* label styles */
+.calc-seq-label {
+    -fx-pref-width: 17.7em;
+    -fx-alignment: center-right;
+    -fx-font-size: 2em;
+    -fx-padding: 0.15em;
+}
+
+.output-label {
+    -fx-pref-width: 7.05em;
+    -fx-alignment: center-right;
+    -fx-font-size: 5em;
+    -fx-background-radius: 0.15em;
+    -fx-padding: 0.15em 0.15em 0 0;
+}
+
+/* button styles */
+.button {
+    -fx-min-width: 4.40em;
+    -fx-min-height: 2.45em;
+    -fx-font-size: 2em;
+    -fx-background-radius: 0.30em;
+    -fx-border-color: #000;
+}
+
+.button:hover {
+    -fx-opacity: 0.90;
+}
+
+.button:pressed {
+    -fx-opacity: 0.5;
+}
+
+/* row colored buttons */
+.btn-primary {
+    -fx-background-color: #14213D;
+}
+
+.btn-secondary {
+    -fx-background-color: #FCA311;
+}
