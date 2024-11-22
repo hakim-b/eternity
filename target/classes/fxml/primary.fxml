@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="500" prefWidth="320" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/10.0.2-internal" fx:controller="com.example.FXMLController">
+    <children>
+        <!-- TextField for Input/Output -->
+        <TextField fx:id="display" editable="false" prefHeight="50" prefWidth="300" layoutX="10" layoutY="10"
+                   promptText="Enter value or expression..." />
+
+        <!-- GridPane for Function Buttons -->
+        <GridPane layoutX="10" layoutY="70" hgap="10" vgap="10">
+            <!-- First Row -->
+            <Button text="arccos(x)" GridPane.rowIndex="0" GridPane.columnIndex="0" fx:id="arccosButton" />
+            <Button text="abx" GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="abxButton" />
+            <Button text="logb(x)" GridPane.rowIndex="0" GridPane.columnIndex="2" fx:id="logbButton" />
+
+            <!-- Second Row -->
+            <Button text="Γ(x)" GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="gammaButton" />
+            <Button text="MAD" GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="madButton" />
+            <Button text="σ" GridPane.rowIndex="1" GridPane.columnIndex="2" fx:id="stdDevButton" />
+
+            <!-- Third Row -->
+            <Button text="sinh(x)" GridPane.rowIndex="2" GridPane.columnIndex="0" fx:id="sinhButton" />
+            <Button text="x" GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="xButton" />
+        </GridPane>
+
+        <!-- GridPane for Numbers and Operators -->
+        <GridPane layoutX="10" layoutY="220" hgap="10" vgap="10">
+            <!-- Number Buttons -->
+            <Button text="7" GridPane.rowIndex="0" GridPane.columnIndex="0" fx:id="button7" />
+            <Button text="8" GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="button8" />
+            <Button text="9" GridPane.rowIndex="0" GridPane.columnIndex="2" fx:id="button9" />
+            <Button text="4" GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="button4" />
+            <Button text="5" GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="button5" />
+            <Button text="6" GridPane.rowIndex="1" GridPane.columnIndex="2" fx:id="button6" />
+            <Button text="1" GridPane.rowIndex="2" GridPane.columnIndex="0" fx:id="button1" />
+            <Button text="2" GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="button2" />
+            <Button text="3" GridPane.rowIndex="2" GridPane.columnIndex="2" fx:id="button3" />
+            <Button text="0" GridPane.rowIndex="3" GridPane.columnIndex="0" fx:id="button0" />
+
+            <!-- Arithmetic Operators -->
+            <Button text="*" GridPane.rowIndex="0" GridPane.columnIndex="3" fx:id="multiplyButton" />
+            <Button text="/" GridPane.rowIndex="1" GridPane.columnIndex="3" fx:id="divideButton" />
+            <Button text="-" GridPane.rowIndex="2" GridPane.columnIndex="3" fx:id="subtractButton" />
+            <Button text="+" GridPane.rowIndex="3" GridPane.columnIndex="3" fx:id="addButton" />
+
+            <!-- Equals Button -->
+            <Button text="=" GridPane.rowIndex="3" GridPane.columnIndex="2" fx:id="equalsButton" />
+        </GridPane>
+    </children>
+</AnchorPane>
