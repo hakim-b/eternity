@@ -391,6 +391,8 @@ public class FXMLController implements Initializable {
         if (base == 0)
             return 0;
 
+        if (exponent < 0) return 1 / pow(base, -exponent); // Handle negative exponents
+
         // Handle integer exponents more efficiently
         if (floor(exponent) == exponent) {
             double result = 1;
