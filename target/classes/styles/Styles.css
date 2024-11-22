@@ -40,10 +40,10 @@
 }
 
 /* row colored buttons */
-.button-row-0-primary-color {
+.btn-primary {
     -fx-background-color: #14213D;
 }
 
-.button-row-0-secondary-color {
+.btn-secondary {
     -fx-background-color: #FCA311;
 }
