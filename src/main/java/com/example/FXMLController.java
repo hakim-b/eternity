@@ -14,8 +14,9 @@ import javafx.scene.control.Label;
 
 public class FXMLController implements Initializable {
 
-    @FXML
-    private Label lblOut;
+    public Label calcSeqLbl;
+    public Label outputLabel;
+
 
     private static final double[] p = {
             676.5203681218851,
