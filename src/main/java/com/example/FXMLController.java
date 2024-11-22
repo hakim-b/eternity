@@ -25,8 +25,8 @@ public class FXMLController implements Initializable {
     public Label calcSeqLbl;
     public Label outputLabel;
 
-    private boolean pressedBinary, pressedUnary, pressedEqual;
-    private boolean num1Stored, num2Stored;
+    private boolean binaryOpPressed, pressedUnary, pressedEqual;
+    private boolean operand1Stored, operand2Stored;
 
     private double num1, num2;
     private String binaryOperator;
@@ -306,14 +306,19 @@ public class FXMLController implements Initializable {
         if (shouldReplaceZero(outputLabelTxt)) {
             outputLabel.setText(numInput);
 
+
         } else {
             outputLabel.setText(outputLabelTxt + numInput);
         }
     }
 
     private boolean shouldReplaceZero(String outputTxt) {
-        return (num1Stored && !num2Stored && pressedBinary) || pressedEqual || pressedUnary
+        return (operand1Stored && !operand2Stored && binaryOpPressed) || pressedEqual || pressedUnary
                 || Double.parseDouble(outputTxt) == 0;
+    }
+
+    private boolean shouldStoreOper2() {
+        return !operand2Stored && operand1Stored && binaryOpPressed;
     }
 
     private static final double[] p = {
