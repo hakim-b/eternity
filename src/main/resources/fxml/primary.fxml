@@ -20,7 +20,7 @@
     <!-- Calculation Sequence label-->
     <Label fx:id="calcSeqLbl" prefWidth="30.0" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="40.0" />
 
-                <!-- output label -->
+   <!-- output label -->
     <Label fx:id="outputLabel" layoutX="100.0" text="0" textFill="#f8f8f8" AnchorPane.leftAnchor="7" AnchorPane.topAnchor="90">
       <font>
          <Font size="30.0" />
@@ -31,54 +31,49 @@
    </Label>
 
     <!-- Calculator Grid buttons -->
-
     <GridPane AnchorPane.leftAnchor="5" AnchorPane.topAnchor="200">
         <!-- Row 0 -->
-
-        <Button text="\%" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <Button text="CE" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-        <Button text="C" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-        <Button text="⌫" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+        <Button text="\%" GridPane.columnIndex="0" GridPane.rowIndex="0" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="CE" GridPane.columnIndex="1" GridPane.rowIndex="0" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="C" GridPane.columnIndex="2" GridPane.rowIndex="0" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="⌫" GridPane.columnIndex="3" GridPane.rowIndex="0" maxWidth="Infinity" style="-fx-background-color: orange; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
 
         <!-- Row 1 -->
-
-        <Button text="1/x" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <Button text="x^2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <Button text="√x" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-        <Button text="/" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+       <Button text="1/x" GridPane.columnIndex="0" GridPane.rowIndex="1" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="x^2" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="√x" GridPane.columnIndex="2" GridPane.rowIndex="1" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="/" GridPane.columnIndex="3" GridPane.rowIndex="1" maxWidth="Infinity" style="-fx-background-color: orange; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="σ" fx:id="sigmaButton" GridPane.columnIndex="4" GridPane.rowIndex="1" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleSigmaButtonAction" />
 
         <!-- Row 2 -->
-
-        <Button text="7" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-        <Button text="8" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-        <Button text="9" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-        <Button text="*" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+        <Button text="7" GridPane.columnIndex="0" GridPane.rowIndex="2" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="8" GridPane.columnIndex="1" GridPane.rowIndex="2" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="9" GridPane.columnIndex="2" GridPane.rowIndex="2" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="*" GridPane.columnIndex="3" GridPane.rowIndex="2" maxWidth="Infinity" style="-fx-background-color: orange; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
 
         <!-- Row 3 -->
-
-        <Button text="4" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-        <Button text="5" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-        <Button text="6" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-        <Button text="-" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-
+        <Button text="4" GridPane.columnIndex="0" GridPane.rowIndex="3" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="5" GridPane.columnIndex="1" GridPane.rowIndex="3" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="6" GridPane.columnIndex="2" GridPane.rowIndex="3" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="-" GridPane.columnIndex="3" GridPane.rowIndex="3" maxWidth="Infinity" style="-fx-background-color: orange; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+       
         <!-- Row 4 -->
-
-        <Button text="1" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-        <Button text="2" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-        <Button text="3" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-        <Button text="+" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+        <Button text="1" GridPane.columnIndex="0" GridPane.rowIndex="4" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="2" GridPane.columnIndex="1" GridPane.rowIndex="4" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="3" GridPane.columnIndex="2" GridPane.rowIndex="4" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="+" GridPane.columnIndex="3" GridPane.rowIndex="4" maxWidth="Infinity" style="-fx-background-color: orange; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
 
         <!-- Row 5 -->
-
-        <Button text="+/-" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-        <Button text="0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-        <Button text="." GridPane.columnIndex="2" GridPane.rowIndex="5" />
-        <Button text="=" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+        <Button text="+/-" GridPane.columnIndex="0" GridPane.rowIndex="5" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="0" GridPane.columnIndex="1" GridPane.rowIndex="5" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="." GridPane.columnIndex="2" GridPane.rowIndex="5" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
+        <Button text="=" GridPane.columnIndex="3" GridPane.rowIndex="5" maxWidth="Infinity" style="-fx-background-color: orange; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" />
       <columnConstraints>
-         <ColumnConstraints />
-         <ColumnConstraints />
-         <ColumnConstraints />
-         <ColumnConstraints />
+         <ColumnConstraints prefWidth="50"/>
+         <ColumnConstraints prefWidth="50"/>
+         <ColumnConstraints prefWidth="50"/>
+         <ColumnConstraints prefWidth="50"/>
+         <ColumnConstraints prefWidth="50"/>
       </columnConstraints>
       <rowConstraints>
          <RowConstraints />
@@ -89,5 +84,4 @@
          <RowConstraints />
       </rowConstraints>
     </GridPane>
-
 </AnchorPane>
