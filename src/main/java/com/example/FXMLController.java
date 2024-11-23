@@ -644,11 +644,11 @@ public class FXMLController implements Initializable {
             case CommonConstants.DEL:
                 String outputTxt = outputLabel.getText();
 
-                if (Double.parseDouble(outputTxt) != 0) {
+                if (!outputTxt.isEmpty() && outputTxt.length() > 1) {
+                    // Remove the last character
                     outputLabel.setText(outputTxt.substring(0, outputTxt.length() - 1));
-                }
-
-                if (outputTxt.length() <= 0) {
+                } else {
+                    // Reset to "0" when empty or only one character remains
                     outputLabel.setText("0");
                 }
 
