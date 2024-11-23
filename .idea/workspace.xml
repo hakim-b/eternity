@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="278aaee9-6c31-48e8-b0f4-67a5b03ec5d7" name="Changes" comment="hm">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/constants/CommonConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/FXMLController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/FXMLController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/primary.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/primary.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/fxml/primary.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/primary.fxml" afterDir="false" />
-    </list>
+    <list default="true" id="278aaee9-6c31-48e8-b0f4-67a5b03ec5d7" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -24,6 +18,7 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -127,7 +122,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1731295270580</updated>
-      <workItem from="1732311730055" duration="12403000" />
+      <workItem from="1732311730055" duration="12660000" />
     </task>
     <task id="LOCAL-00001" summary="addded gamma function">
       <option name="closed" value="true" />
@@ -169,7 +164,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732312391120</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="completed setup">
+      <option name="closed" value="true" />
+      <created>1732335576752</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1732335576753</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -181,6 +184,7 @@
     <MESSAGE value="lil ui refactor" />
     <MESSAGE value="can now display numbers" />
     <MESSAGE value="hm" />
-    <option name="LAST_COMMIT_MESSAGE" value="hm" />
+    <MESSAGE value="completed setup" />
+    <option name="LAST_COMMIT_MESSAGE" value="completed setup" />
   </component>
 </project>
