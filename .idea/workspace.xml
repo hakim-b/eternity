@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="278aaee9-6c31-48e8-b0f4-67a5b03ec5d7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="278aaee9-6c31-48e8-b0f4-67a5b03ec5d7" name="Changes" comment="edit gitignore">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/FXMLController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/FXMLController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/constants/CommonConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/constants/CommonConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/primary.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/primary.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/fxml/primary.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/primary.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,7 +130,7 @@
       <updated>1731295270580</updated>
       <workItem from="1732311730055" duration="12660000" />
       <workItem from="1732335687492" duration="549000" />
-      <workItem from="1732380016900" duration="379000" />
+      <workItem from="1732380016900" duration="2569000" />
     </task>
     <task id="LOCAL-00001" summary="addded gamma function">
       <option name="closed" value="true" />
@@ -193,7 +196,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732336221289</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="edit gitignore">
+      <option name="closed" value="true" />
+      <created>1732380503078</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1732380503078</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -207,6 +218,7 @@
     <MESSAGE value="hm" />
     <MESSAGE value="completed setup" />
     <MESSAGE value="logb issue" />
-    <option name="LAST_COMMIT_MESSAGE" value="logb issue" />
+    <MESSAGE value="edit gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="edit gitignore" />
   </component>
 </project>

@@ -581,16 +581,6 @@ public class FXMLController implements Initializable {
             case CommonConstants.OPERATOR_NEGATE:
                 result *= -1;
                 break;
-            case CommonConstants.OPERATOR_ARCCOS:
-                if (result < -1 || result >1) {
-                    calcSeqLbl.setText("undefined");
-                    reset();
-                } else {
-                    result = arccos(result);
-                    calcSeqLbl.setText(String.format("arccos(%f)", result));
-                }
-
-                break;
         }
 
         if (!operand1Stored) {
@@ -724,9 +714,6 @@ public class FXMLController implements Initializable {
                 } else {
                     result = oper1 / oper2;
                 }
-                break;
-            case CommonConstants.CARTESIAN_PRODUCT:
-                result = pow(oper1, oper2);
                 break;
         }
 
