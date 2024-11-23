@@ -18,17 +18,22 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.net.URL;
+
 import javafx.fxml.Initializable;
+
 import java.util.ResourceBundle;
+
+import com.example.constants.CommonConstants;
+
 
 public class FXMLController implements Initializable {
     public Label calcSeqLbl;
     public Label outputLabel;
 
-    private boolean binaryOpPressed, pressedUnary, pressedEqual;
+    private boolean binaryOpPressed, unaryOpPressed, equalPressed;
     private boolean operand1Stored, operand2Stored;
 
-    private double num1, num2;
+    private double oper1, oper2;
     private String binaryOperator;
 
     // Identifies the special function chosen.
@@ -203,7 +208,7 @@ public class FXMLController implements Initializable {
     /**
      * Displays both the result of the evaluated equation and accompanying graphical
      * visualization.
-     * 
+     *
      * @param functionType
      * @param computation
      * @param result
@@ -274,7 +279,7 @@ public class FXMLController implements Initializable {
 
     @FXML
     private void handleLogBtnClick(ActionEvent event) {
-        
+
     }
 
     @FXML
@@ -288,16 +293,6 @@ public class FXMLController implements Initializable {
     }
 
     @FXML
-    private void handleCartesianProductBtnClick(ActionEvent event) {
-
-    }
-
-    @FXML
-    private void handleArcCosBtnClick(ActionEvent event) {
-
-    }
-
-    @FXML
     private void handleNumberBtnClick(ActionEvent event) {
         Button btn = (Button) event.getSource();
         String numInput = btn.getText();
@@ -306,19 +301,222 @@ public class FXMLController implements Initializable {
         if (shouldReplaceZero(outputLabelTxt)) {
             outputLabel.setText(numInput);
 
+            if (shouldStoreOper2()) {
+                operand2Stored = true;
+            }
 
+            equalPressed = false;
+            unaryOpPressed = false;
         } else {
             outputLabel.setText(outputLabelTxt + numInput);
         }
     }
 
     private boolean shouldReplaceZero(String outputTxt) {
-        return (operand1Stored && !operand2Stored && binaryOpPressed) || pressedEqual || pressedUnary
+        return (operand1Stored && !operand2Stored && binaryOpPressed) || equalPressed || unaryOpPressed
                 || Double.parseDouble(outputTxt) == 0;
     }
 
     private boolean shouldStoreOper2() {
         return !operand2Stored && operand1Stored && binaryOpPressed;
+    }
+
+    @FXML
+    private void handleUnaryBtnClick(ActionEvent event) {
+        Button btn = (Button) event.getSource();
+        String unaryOperator = btn.getText();
+
+        double result = Double.parseDouble(outputLabel.getText());
+
+        switch (unaryOperator) {
+            case CommonConstants.OPERATOR_PERCENT:
+                result /= 100;
+                calcSeqLbl.setText(Double.toString(result));
+                break;
+            case CommonConstants.OPERATOR_RECIPROCAL:
+                if (result == 0) {
+                    outputLabel.setText("undefined");
+                    reset();
+                } else {
+                    result = 1 / result;
+                    calcSeqLbl.setText(String.format("1/%f", result));
+                }
+
+                break;
+            case CommonConstants.OPERATOR_SQUARE:
+                result *= result;
+                calcSeqLbl.setText(String.format("sqr(%f)", result));
+                break;
+            case CommonConstants.OPERATOR_SQRT:
+                if (result < 0) {
+                    calcSeqLbl.setText("Keep it real");
+                    reset();
+                } else {
+                    result = sqrt(result);
+                    calcSeqLbl.setText(String.format("sqrt(%f)", result));
+                }
+                break;
+            case CommonConstants.OPERATOR_NEGATE:
+                result *= -1;
+                break;
+            case CommonConstants.OPERATOR_ARCCOS:
+                if (result < -1 || result >1) {
+                    calcSeqLbl.setText("undefined");
+                    reset();
+                } else {
+                    result = arccos(result);
+                    calcSeqLbl.setText(String.format("arccos(%f)", result));
+                }
+
+                break;
+        }
+
+        if (!operand1Stored) {
+            oper1 = result;
+            operand1Stored = true;
+        } else if (shouldStoreOper2()) {
+            oper2 = result;
+            operand2Stored = true;
+        }
+
+        outputLabel.setText(Double.toString(result));
+
+        unaryOpPressed = true;
+        equalPressed = false;
+        binaryOpPressed = false;
+    }
+
+    @FXML
+    private void handleBinaryBtnClick(ActionEvent event) {
+        Button btn = (Button) event.getSource();
+        String binaryOperator = btn.getText();
+
+        if (!operand1Stored) {
+            oper1 = Double.parseDouble(outputLabel.getText());
+            operand1Stored = true;
+        }
+
+        if (operand1Stored) {
+            updateBinaryOperator(binaryOperator);
+        }
+
+        binaryOpPressed = true;
+        unaryOpPressed = false;
+        equalPressed = false;
+    }
+
+    private void updateBinaryOperator(String binaryOperator) {
+        this.binaryOperator = binaryOperator;
+        calcSeqLbl.setText(String.format("%f %s", oper1, this.binaryOperator));
+    }
+
+    @FXML
+    private void handleDotBtnClick() {
+        if (!outputLabel.getText().contains(".")) {
+            outputLabel.setText(outputLabel.getText() + ".");
+        }
+    }
+
+    @FXML
+    private void handleOutputControl(ActionEvent event) {
+        Button button = (Button) event.getSource();
+        String btnTxt = button.getText();
+
+        switch (btnTxt) {
+            case CommonConstants.CLEAR_ENTRY:
+                outputLabel.setText("0");
+                break;
+            case CommonConstants.CLR:
+                reset();
+                break;
+            case CommonConstants.DEL:
+                String outputTxt = outputLabel.getText();
+
+                if (Double.parseDouble(outputTxt) != 0) {
+                    outputLabel.setText(outputTxt.substring(0, outputTxt.length() - 1));
+                }
+
+                if (outputTxt.length() <= 0) {
+                    outputLabel.setText("0");
+                }
+
+                break;
+        }
+    }
+
+    private void reset() {
+        outputLabel.setText("0");
+        calcSeqLbl.setText("");
+        operand1Stored = false;
+        operand2Stored = false;
+        binaryOpPressed = false;
+        unaryOpPressed = false;
+        equalPressed = false;
+    }
+
+    @FXML
+    private void handleEqualBtnClick() {
+        if (shouldStoreOper2()) {
+            oper2 = oper1;
+            operand2Stored = true;
+        }
+
+        if (shouldCalculate()) {
+            calculate();
+
+            equalPressed = true;
+            binaryOpPressed = false;
+            unaryOpPressed = false;
+        }
+    }
+
+    private boolean shouldCalculate() {
+        return operand1Stored && operand2Stored;
+    }
+
+    private void calculate() {
+        oper2 = Double.parseDouble(outputLabel.getText());
+        operand2Stored = true;
+
+        oper1 = getBinaryCalculation();
+        outputLabel.setText(Double.toString(oper1));
+    }
+
+    private double getBinaryCalculation() {
+        double result = 0;
+
+        switch (binaryOperator) {
+            case CommonConstants.ADDITION:
+                result = oper1 + oper2;
+                break;
+            case CommonConstants.SUBTRACTION:
+                result = oper1 - oper2;
+                break;
+            case CommonConstants.MULTIPLICATION:
+                result = oper1 * oper2;
+                break;
+            case CommonConstants.DIVISION:
+                if (oper2 == 0) {
+                    outputLabel.setText("undefined");
+                    reset();
+                } else {
+                    result = oper1 / oper2;
+                }
+                break;
+            case CommonConstants.CARTESIAN_PRODUCT:
+                result = pow(oper1, oper2);
+                break;
+        }
+
+        calcSeqLbl.setText(String.format("%f %s %f = ", oper1, binaryOperator, oper2));
+
+        oper1 = 0;
+        operand1Stored = false;
+
+        oper2 = 0;
+        operand2Stored = false;
+
+        return result;
     }
 
     private static final double[] p = {
