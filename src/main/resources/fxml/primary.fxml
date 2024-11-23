@@ -3,6 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -10,10 +12,19 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="560" prefWidth="435" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.FXMLController">
-   <VBox layoutY="-1.0" prefHeight="193.0" prefWidth="435.0" style="-fx-background-color: black; -fx-border-color: gray; -fx-border-width: 5;">
+<AnchorPane id="AnchorPane" maxWidth="455.0" prefHeight="389.0" prefWidth="455.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.FXMLController">
+   <VBox layoutY="189.0" prefHeight="212.0" prefWidth="455.0">
       <children>
-         <VBox prefHeight="200.0" prefWidth="100.0" />
+         <ImageView fitHeight="271.0" fitWidth="456.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
+            <image>
+               <Image url="@../calc_background.png" />
+            </image>
+         </ImageView>
+      </children>
+   </VBox>
+   <VBox layoutY="-1.0" prefHeight="193.0" prefWidth="456.0" style="-fx-background-color: black; -fx-border-color: dimgray; -fx-border-width: 5;">
+      <children>
+         <VBox maxWidth="0.0" prefHeight="183.0" prefWidth="628.0" />
       </children>
    </VBox>
 
@@ -30,64 +41,73 @@
       </padding>
    </Label>
 
-    <!-- Calculator Grid buttons -->
-
-    <GridPane AnchorPane.leftAnchor="5" AnchorPane.topAnchor="200">
+      <!-- Calculator Grid buttons -->
+      <GridPane layoutY="500.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="200.0">
         <!-- Row 0 -->
-        <Button text="\%" GridPane.columnIndex="0" GridPane.rowIndex="0" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleUnaryBtnClick"/>
-        <Button text="CE" GridPane.columnIndex="1" GridPane.rowIndex="0" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleOutputControl"/>
-        <Button text="C" GridPane.columnIndex="2" GridPane.rowIndex="0" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleOutputControl"/>
-        <Button text="⌫" GridPane.columnIndex="3" GridPane.rowIndex="0" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black; -fx-background-color: orange;" onAction="#handleOutputControl"/>
-        <Button text="logb(x) " fx:id="logButton" GridPane.columnIndex="4" GridPane.rowIndex="0" maxWidth="Infinity" style="-fx-background-color: aqua; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleLogBtnClick" />
-
-        <!-- Row 1 -->
-         <Button text="1/x" GridPane.columnIndex="0" GridPane.rowIndex="1" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleUnaryBtnClick"/>
-        <Button text="x^2" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleUnaryBtnClick"/>
-        <Button text="√x" GridPane.columnIndex="2" GridPane.rowIndex="1" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleUnaryBtnClick"/>
-        <Button text="/" GridPane.columnIndex="3" GridPane.rowIndex="1" maxWidth="Infinity" style="-fx-background-color: orange; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleBinaryBtnClick"/>
-        <Button text="σ" fx:id="sigmaButton" GridPane.columnIndex="4" GridPane.rowIndex="1" maxWidth="Infinity" style="-fx-background-color: aqua; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleSigmaButtonAction" />
-
-        <!-- Row 2 -->
-        <Button text="7" GridPane.columnIndex="0" GridPane.rowIndex="2" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleNumberBtnClick"/>
-        <Button text="8" GridPane.columnIndex="1" GridPane.rowIndex="2" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleNumberBtnClick"/>
-        <Button text="9" GridPane.columnIndex="2" GridPane.rowIndex="2" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleNumberBtnClick"/>
-        <Button text="*" GridPane.columnIndex="3" GridPane.rowIndex="2" maxWidth="Infinity" style="-fx-background-color: orange; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleBinaryBtnClick"/>
-        <Button text="MAD" fx:id="madButton" GridPane.columnIndex="4" GridPane.rowIndex="2" maxWidth="Infinity" style="-fx-background-color: aqua; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleMADBtnClick" />
-
-        <!-- Row 3 -->
-        <Button text="4" GridPane.columnIndex="0" GridPane.rowIndex="3" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleNumberBtnClick"/>
-        <Button text="5" GridPane.columnIndex="1" GridPane.rowIndex="3" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleNumberBtnClick"/>
-        <Button text="6" GridPane.columnIndex="2" GridPane.rowIndex="3" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleNumberBtnClick"/>
-        <Button text="-" GridPane.columnIndex="3" GridPane.rowIndex="3" maxWidth="Infinity" style="-fx-background-color: orange; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleBinaryBtnClick"/>
-        <Button text="ab^x" fx:id="expButton" GridPane.columnIndex="4" GridPane.rowIndex="3" maxWidth="Infinity" style="-fx-background-color: aqua; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleExponentialBtnClick" />
-        
-        <!-- Row 4 -->
-        <Button text="1" GridPane.columnIndex="0" GridPane.rowIndex="4" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleNumberBtnClick"/>
-        <Button text="2" GridPane.columnIndex="1" GridPane.rowIndex="4" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleNumberBtnClick"/>
-        <Button text="3" GridPane.columnIndex="2" GridPane.rowIndex="4" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleNumberBtnClick"/>
-        <Button text="+" GridPane.columnIndex="3" GridPane.rowIndex="4" maxWidth="Infinity" style="-fx-background-color: orange; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleBinaryBtnClick"/>
-        <Button text="x^y" fx:id="cartprodButton" GridPane.columnIndex="4" GridPane.rowIndex="4" maxWidth="Infinity" style="-fx-background-color: aqua; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleBinaryBtnClick" />
-
-        <!-- Row 5 -->
-        <Button text="+/-" GridPane.columnIndex="0" GridPane.rowIndex="5" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleUnaryBtnClick"/>
-        <Button text="0" GridPane.columnIndex="1" GridPane.rowIndex="5" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleNumberBtnClick"/>
-        <Button text="." GridPane.columnIndex="2" GridPane.rowIndex="5" maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleDotBtnClick"/>
-        <Button text="=" GridPane.columnIndex="3" GridPane.rowIndex="5" maxWidth="Infinity" style="-fx-background-color: orange; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleEqualBtnClick"/>
-        <Button text="arccos(x)" fx:id="arccosButton" GridPane.columnIndex="4" GridPane.rowIndex="5" maxWidth="Infinity" style="-fx-background-color: aqua; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" onAction="#handleUnaryBtnClick" />
+        <Button maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="\%" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Button maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="CE" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Button maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="C" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+        <Button maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black; -fx-background-color: orange;" text="⌫" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+        <Button fx:id="logButton" maxWidth="Infinity" onAction="#handleLogBtnClick" style="-fx-background-color: aqua; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="logb(x) " GridPane.columnIndex="4" GridPane.rowIndex="0" />
+   
+        <!-- Row 1 -->                                                                                       <!-- Row 1 -->
+        <Button maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="1/x" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <Button maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="x^2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Button maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="√x" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        <Button maxWidth="Infinity" style="-fx-background-color: orange; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="/" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+        <Button fx:id="sigmaButton" graphicTextGap="3.0" maxWidth="Infinity" onAction="#handleSigmaButtonAction" style="-fx-background-color: aqua; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="σ" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+   
+         <!-- Row 2 -->                                                                                      <!-- Row 2 -->
+        <Button maxWidth="Infinity" onAction="#handleNumberBtnClick" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="7" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Button maxWidth="Infinity" onAction="#handleNumberBtnClick" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="8" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Button maxWidth="Infinity" onAction="#handleNumberBtnClick" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="9" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+        <Button maxWidth="Infinity" style="-fx-background-color: orange; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="*" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+        <Button fx:id="madButton" maxWidth="Infinity" onAction="#handleMADBtnClick" style="-fx-background-color: aqua; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="MAD" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+        <Button fx:id="gammaButton" maxWidth="Infinity" onAction="#handleGammaBtnClick" style="-fx-background-color: aqua; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="Γ(x)" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+   
+         <!-- Row 3 -->                                                                                      <!-- Row 3 -->
+        <Button maxWidth="Infinity" onAction="#handleNumberBtnClick" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="4" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <Button maxWidth="Infinity" onAction="#handleNumberBtnClick" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="5" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <Button maxWidth="Infinity" onAction="#handleNumberBtnClick" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="6" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+        <Button maxWidth="Infinity" style="-fx-background-color: orange; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="-" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+        <Button fx:id="expButton" maxWidth="Infinity" onAction="#handleExponentialBtnClick" style="-fx-background-color: aqua; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="ab^x" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+        <Button fx:id="sineButton" maxWidth="Infinity" onAction="#handleSineBtnClick" style="-fx-background-color: aqua; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="sinh(x)" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+   
+         <!-- Row 4 -->                                                                                        <!-- Row 4 -->
+        <Button maxWidth="Infinity" onAction="#handleNumberBtnClick" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="1" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <Button maxWidth="Infinity" onAction="#handleNumberBtnClick" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="2" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <Button maxWidth="Infinity" onAction="#handleNumberBtnClick" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="3" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+        <Button maxWidth="Infinity" style="-fx-background-color: orange; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="+" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+        <Button fx:id="cartprodButton" maxWidth="Infinity" onAction="#handleCartesianProductBtnClick" style="-fx-background-color: aqua; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="x^y" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+   
+         <!-- Row 5 -->                                                                                        <!-- Row 5 -->
+        <Button maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="+/-" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <Button maxWidth="Infinity" onAction="#handleNumberBtnClick" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+        <Button maxWidth="Infinity" style="-fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="." GridPane.columnIndex="2" GridPane.rowIndex="5">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+        <Button maxWidth="Infinity" style="-fx-background-color: orange; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="=" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+        <Button fx:id="arccosButton" maxWidth="Infinity" onAction="#handleArcCosBtnClick" style="-fx-background-color: aqua; -fx-alignment: center; -fx-border-width: 2; -fx-border-color: black;" text="arccos(x)" GridPane.columnIndex="4" GridPane.rowIndex="5" />
       <columnConstraints>
-         <ColumnConstraints prefWidth="50"/>
-         <ColumnConstraints prefWidth="50"/>
-         <ColumnConstraints prefWidth="50"/>
-         <ColumnConstraints prefWidth="50"/>
-         <ColumnConstraints prefWidth="75"/>
+         <ColumnConstraints prefWidth="75" />
+         <ColumnConstraints prefWidth="75" />
+         <ColumnConstraints prefWidth="75" />
+         <ColumnConstraints prefWidth="75" />
+         <ColumnConstraints prefWidth="75" />
+         <ColumnConstraints prefWidth="75" />
       </columnConstraints>
       <rowConstraints>
-         <RowConstraints />
-         <RowConstraints />
+         <RowConstraints maxHeight="56.0" minHeight="24.0" prefHeight="31.0" />
+         <RowConstraints maxHeight="34.0" minHeight="2.0" prefHeight="27.0" />
          <RowConstraints />
          <RowConstraints />
          <RowConstraints />
          <RowConstraints />
       </rowConstraints>
+      <padding>
+         <Insets top="15.0" />
+      </padding>
     </GridPane>
 </AnchorPane>

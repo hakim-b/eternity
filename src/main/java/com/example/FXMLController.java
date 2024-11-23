@@ -13,18 +13,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.net.URL;
-
 import javafx.fxml.Initializable;
-
 import java.util.ResourceBundle;
-
 import com.example.constants.CommonConstants;
-
 
 public class FXMLController implements Initializable {
     public Label calcSeqLbl;
@@ -68,11 +65,33 @@ public class FXMLController implements Initializable {
         fileImporButton.setOnAction(ev -> handleFileImport(dataStage));
 
         layout.getChildren().addAll(manualInputButton, fileImporButton);
+        setBackground(layout, "src\\main\\resources\\calc_sigmaWizard.png");
         Scene scene = new Scene(layout, 350, 150);
         dataStage.setTitle("Standard Deviaton Wizard!");
         dataStage.setScene(scene);
         dataStage.show();
     }
+
+    /**
+     * Sets a custom background wallpaper for the given pane.
+     * 
+     * @param pane
+     * @param imagePath
+     */
+    private void setBackground(Pane pane, String imagePath) {
+        // Load the image
+        Image backgroundImage = new Image("file:" + imagePath);
+
+        // Set the image as the background
+        BackgroundImage bgImage = new BackgroundImage(
+                backgroundImage,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, true, true));
+        pane.setBackground(new Background(bgImage));
+    }
+
 
     /**
      * Displays a dedicated pane for manual data input.
@@ -129,9 +148,10 @@ public class FXMLController implements Initializable {
                 manualInputLayout.getChildren().add(submitButton);
             } catch (NumberFormatException exception) {
                 showError("Invalid Input", "Please enter a valid integer.");
+            } catch (RuntimeException exception) {
+                showError(exception.getClass().getSimpleName(), exception.getMessage());
             }
         });
-
         manualInputLayout.getChildren().addAll(instructionLabel, dataPointField, confirmButton);
         manualInputStage.setScene(new Scene(manualInputLayout, 400, 300));
         manualInputStage.setTitle("Manual Data Input");
@@ -162,6 +182,8 @@ public class FXMLController implements Initializable {
                         showError("Invalid Format",
                                 "The file contains invalid data, only numeric values are permitted.");
                         return;
+                    } catch (RuntimeException exception) {
+                        showError(exception.getClass().getSimpleName(), exception.getMessage());
                     }
                 }
                 showAlert("Success", "Data successfully imported!");
@@ -174,7 +196,7 @@ public class FXMLController implements Initializable {
                 displayResultsWithGraph(functionType, computation, result, dataset);
                 parentStage.close();
             } catch (Exception exception) {
-                showError("ERROR", "An error occured while reading the file.");
+                showError(exception.getClass().getSimpleName(), exception.getMessage());
             }
         }
     }
@@ -208,7 +230,7 @@ public class FXMLController implements Initializable {
     /**
      * Displays both the result of the evaluated equation and accompanying graphical
      * visualization.
-     *
+     * 
      * @param functionType
      * @param computation
      * @param result
@@ -239,7 +261,7 @@ public class FXMLController implements Initializable {
         if (functionType.equals("MAD") || functionType.equals("σ")) {
             for (int i = 0; i < dataset.size(); i++)
                 series.getData().add(new XYChart.Data<>(i, dataset.get(i)));
-        } else if (functionType.equals("arccos")) {
+        } else if (functionType.equals("arccos(x)")) {
             for (double x = -1.0; x <= 1.0; x += 0.1) {
                 double y = arccos(x);
                 series.getData().add(new XYChart.Data<>(x, y));
@@ -257,39 +279,253 @@ public class FXMLController implements Initializable {
                 double y = pow(x, yExponent);
                 series.getData().add(new XYChart.Data<>(x, y));
             }
-        } else if (functionType.equals("Gamma")) {
+        } else if (functionType.equals("Γ(x)")) {
             for (double x = 0.5; x <= 10.0; x += 0.5) {
                 double y = gamma(x);
                 series.getData().add(new XYChart.Data<>(x, y));
             }
-        } else if (functionType.equals("sinh")) {
+        } else if (functionType.equals("sinh(x)")) {
             for (double x = -10.0; x <= 10.0; x++) {
                 // double y = sinh(x);
                 // series.getData().add(new XYChart.Data<>(x, y));
+            }
+        } else if (functionType.equals("logb(x)")) {
+            double base = dataset.get(0);
+            double maxRange = 10;
+            for (double x = 0.01; x <= maxRange; x += 0.1) {
+                double y = Math.log(x) / Math.log(base);
+                series.getData().add(new XYChart.Data<>(x, y));
             }
         }
 
         lineChart.getData().add(series);
         VBox layout = new VBox(10, computationLabel, lineChart);
         layout.setStyle("-fx-padding: 20;");
-        Scene scene = new Scene(layout, 800, 600);
+        Scene scene = new Scene(layout, 700, 400);
         stage.setScene(scene);
         stage.show();
     }
 
+
+    /**
+     * Handles the action when the "Logarithmic Function" button is clicked.
+     * This method prompts the user for a value (x) and a base (b),
+     * computes the logarithm of x to the base b using the logb function,
+     * and displays the result and visualization.
+     *
+     * @param event The event triggered by clicking the "Log" button.
+     */
     @FXML
     private void handleLogBtnClick(ActionEvent event) {
+        dataset.clear();
+        // Prompt the user to input the value of x
+        TextInputDialog xDialog = new TextInputDialog();
+        xDialog.setTitle("Logarithmic Function");
+        xDialog.setHeaderText("Compute logb(x)");
+        xDialog.setContentText("Enter the value (x): ");
 
+        // Prompt the user to input the base b
+        TextInputDialog bDialog = new TextInputDialog();
+        bDialog.setTitle("Logarithmic Function");
+        bDialog.setHeaderText("Compute logb(x)");
+        bDialog.setContentText("Enter the base (b):");
+
+        // Show dialog for x and process input
+        xDialog.showAndWait().ifPresent(xInput -> {
+            try {
+                // Parse the input for x
+                double x = Double.parseDouble(xInput);
+                if (x < 0) throw new IllegalArgumentException("Invalid argument x, value cannot be negative");
+                // Show dialog for b and process input
+                bDialog.showAndWait().ifPresent(bInput -> {
+                    try {
+                        double b = Double.parseDouble(bInput);
+                        // Compute logb(x) using the custom logb function
+                        double result = logb(x, b);
+                        String equation = "log_" + b + "(" + x + ")";
+                        // Display the results with optional graph visualization
+                        dataset.add(b);
+                        displayResultsWithGraph("logb(x)", equation, result, dataset);
+                    } catch (NumberFormatException exception) {
+                        // Handle invalid numeric input for b
+                        showError("NUMBER FORMAT ERROR", "Invalid base. Please enter a numeric value.");
+                    } catch (IllegalArgumentException exception) {
+                        // Handle invalid values for b (e.g., b <= 0 or b == 1)
+                        showError("INVALID INPUT", exception.getMessage());
+                    }
+                });
+            } catch (NumberFormatException exception) {
+                // Handle invalid numeric input for x
+                showError("NUMBER FORMAT ERROR", "Invalid value for x. Please enter a numeric value.");
+            } catch (IllegalArgumentException exception) {
+                // Handle invalid values for x (e.g., x <= 0)
+                showError("INVALID INPUT", exception.getMessage());
+            }
+        });
     }
-
+    
     @FXML
     private void handleMADBtnClick(ActionEvent event) {
 
     }
 
+    /**
+     * Handles the action when the "ab^x" button is clicked.
+     * @param event
+     */
     @FXML
     private void handleExponentialBtnClick(ActionEvent event) {
+        dataset.clear();
+        // Prompt user for the parameter 'a'
+        TextInputDialog aDialog = new TextInputDialog();
+        aDialog.setTitle("Exponential Function");
+        aDialog.setHeaderText("Compute ab^x");
+        aDialog.setContentText("Enter the value of 'a':");
 
+        // Prompt user for the parameter 'b'
+        TextInputDialog bDialog = new TextInputDialog();
+        bDialog.setTitle("Exponential Function");
+        bDialog.setHeaderText("Compute ab^x");
+        bDialog.setContentText("Enter the value of 'b':");
+
+        // Prompt user for the parameter 'x'
+        TextInputDialog xDialog = new TextInputDialog();
+        xDialog.setTitle("Exponential Function");
+        xDialog.setHeaderText("Compute ab^x");
+        xDialog.setContentText("Enter the value of 'x':");
+
+        aDialog.showAndWait().ifPresent(aInput -> {
+            try {
+                double a = Double.parseDouble(aInput);
+                bDialog.showAndWait().ifPresent(bInput -> {
+                    try {
+                        double b = Double.parseDouble(bInput);
+                        xDialog.showAndWait().ifPresent(xInput -> {
+                            try {
+                                double x = Double.parseDouble(xInput);
+                                double result = a * pow(b, x);
+                                String equation = "(" + a + ")(" + b + ")^(" + x + ")";
+                                dataset.add(a);
+                                dataset.add(b);
+                                displayResultsWithGraph("ab^x", equation, result, dataset);
+                                dataset.clear();
+                            } catch (NumberFormatException exception) {
+                                showError("NUMBER FORMAT ERROR", "Invalid 'x' value. Please enter a numeric value.");
+                            } catch (RuntimeException exception) {
+                                showError(exception.getClass().getSimpleName(), exception.getMessage());
+                            }
+                        });
+                    } catch (NumberFormatException exception) {
+                        showError("NUMBER FORMAT ERROR", "Invalid 'b' value. Please enter a numeric value.");
+                    } catch (RuntimeException exception) {
+                        showError(exception.getClass().getSimpleName(), exception.getMessage());
+                    }
+                });
+            } catch (NumberFormatException exception) {
+                showError("NUMBER FORMAT ERROR", "Invalid 'a' value. Please enter a numeric value.");
+            } catch (RuntimeException exception) {
+                showError(exception.getClass().getSimpleName(), exception.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Handles the action when the "x^y" button is clicked.
+     * @param event
+     */
+    @FXML
+    private void handleCartesianProductBtnClick(ActionEvent event) {
+        dataset.clear();
+        // Prompt user for base "x"
+        TextInputDialog baseDialog = new TextInputDialog();
+        baseDialog.setTitle("Power Function");
+        baseDialog.setHeaderText("Compute x^y");
+        baseDialog.setContentText("Enter the base (x):");
+
+        // Prompt user for exponent "y"
+        TextInputDialog exponentDialog = new TextInputDialog();
+        exponentDialog.setTitle("Power Function");
+        exponentDialog.setHeaderText("Compute x^y");
+        exponentDialog.setContentText("Enter the exponent (y):");
+
+        baseDialog.showAndWait().ifPresent(baseInput -> {
+            try { 
+                double base = Double.parseDouble(baseInput);
+                exponentDialog.showAndWait().ifPresent(expInput -> {
+                    try {
+                        double exponent = Double.parseDouble(expInput);
+                        double result = pow(base,exponent);
+                        dataset.add(base);
+                        dataset.add(exponent);
+                        String equation = "(" + base + ")^(" + exponent + ")";
+                        displayResultsWithGraph("x^y", equation, result, dataset);
+                    } catch (NumberFormatException exception) {
+                        showError("NUMBER FORMAT ERROR", "Invalid exponent. Please enter a numeric value.");
+                    } catch (RuntimeException exception) {
+                        showError(exception.getClass().getSimpleName(), exception.getMessage());
+                    }
+                });
+            } catch (NumberFormatException exception) {
+                showError("NUMBER FORMAT ERROR", "Invalid base. Please enter a numeric value.");
+            } catch (RuntimeException exception) {
+                showError(exception.getClass().getSimpleName(), exception.getMessage());
+            } 
+        });
+    }
+
+    /**
+     * Handles the action when the "arccos(x)" button is clicked.
+     * @param event
+     */
+    @FXML
+    private void handleArcCosBtnClick(ActionEvent event) {
+        dataset.clear();
+        // Prompt user for "x"
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Arccosine Function");
+        dialog.setHeaderText("Compute arccos(x)");
+        dialog.setContentText("Enter the value (x):");
+
+        dialog.showAndWait().ifPresent(input -> {
+            try {
+                double x = Double.parseDouble(input);
+                String equation = "arccos(" + x + ")";
+                double result = arccos(x);
+                displayResultsWithGraph("arccos(x)", equation, result, null);
+            } catch (NumberFormatException exception) {
+                showError("NUMBER FORMAT ERROR", "Invalid value. Please enter a numeric value.");
+            } catch (RuntimeException exception) {
+                showError(exception.getClass().getSimpleName(), exception.getMessage());
+            }
+        });
+    }
+
+    @FXML
+    private void handleGammaBtnClick(ActionEvent event) {
+        dataset.clear();
+        // Prompt user for "x"
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Gamma Function");
+        dialog.setHeaderText("Compute Γ(x)");
+        dialog.setContentText("Enter the value (x):");
+
+        dialog.showAndWait().ifPresent(input -> {
+            try {
+                double x = Double.parseDouble(input);
+                String equation = "Γ(" + x + ")";
+                double result = gamma(x);
+                displayResultsWithGraph("Γ(x)", equation, result, dataset);
+            } catch (NumberFormatException exception) {
+                showError("NUMBER FORMAT ERROR", "Invalid value. Please enter a numeric value.");
+            } catch (RuntimeException exception) {
+                showError(exception.getClass().getSimpleName(), exception.getMessage());
+            }
+        });
+    }
+
+    @FXML
+    private void handleSineBtnClick(ActionEvent event) {
+        
     }
 
     @FXML
@@ -301,24 +537,10 @@ public class FXMLController implements Initializable {
         if (shouldReplaceZero(outputLabelTxt)) {
             outputLabel.setText(numInput);
 
-            if (shouldStoreOper2()) {
-                operand2Stored = true;
-            }
 
-            equalPressed = false;
-            unaryOpPressed = false;
         } else {
             outputLabel.setText(outputLabelTxt + numInput);
         }
-    }
-
-    private boolean shouldReplaceZero(String outputTxt) {
-        return (operand1Stored && !operand2Stored && binaryOpPressed) || equalPressed || unaryOpPressed
-                || Double.parseDouble(outputTxt) == 0;
-    }
-
-    private boolean shouldStoreOper2() {
-        return !operand2Stored && operand1Stored && binaryOpPressed;
     }
 
     @FXML
@@ -519,6 +741,15 @@ public class FXMLController implements Initializable {
         return result;
     }
 
+    private boolean shouldReplaceZero(String outputTxt) {
+        return (operand1Stored && !operand2Stored && binaryOpPressed) || equalPressed || unaryOpPressed
+                || Double.parseDouble(outputTxt) == 0;
+    }
+
+    private boolean shouldStoreOper2() {
+        return !operand2Stored && operand1Stored && binaryOpPressed;
+    }
+
     private static final double[] p = {
             676.5203681218851,
             -1259.1392167224028,
@@ -703,6 +934,27 @@ public class FXMLController implements Initializable {
     }
 
     /**
+     * Computes the logarithm of x to the base b using the existing ln function.
+     * 
+     * @param x The value for which the logarithm is calculated. Must be greater than 0.
+     * @param b The base of the logarithm. Must be greater than 0 and not equal to 1.
+     * @return The logarithm of x to the base b.
+     * @throws IllegalArgumentException if x <= 0, b <= 0, or b == 1.
+     */
+    private static double logb(double x, double b) {
+        if (x <= 0) {
+            throw new IllegalArgumentException("The argument x must be greater than 0.");
+        }
+
+        if (b <= 0 || b == 1) {
+            throw new IllegalArgumentException("The base b must be greater than 0 and not equal to 1.");
+        }
+        
+        return ln(x) / ln(b); 
+    }
+
+    
+    /**
      * Computes the standard deviation given a dataset of double (decimal) values.
      * Note: dataset parameter must be extracted elsewhere, users are not prompted
      * for them here.
@@ -783,17 +1035,6 @@ public class FXMLController implements Initializable {
         }
 
         return result - sum;
-    }
-
-    private static double logb(double x, double b) {
-        if (x <= 0) {
-            throw new IllegalArgumentException("The argument x must be greater than 0.");
-        }
-        if (b <= 0 || b == 1) {
-            throw new IllegalArgumentException("The base b must be greater than 0 and not equal to 1.");
-        }
-
-        return ln(x) / ln(b);
     }
 
     @Override
