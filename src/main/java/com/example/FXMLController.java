@@ -785,6 +785,17 @@ public class FXMLController implements Initializable {
         return result - sum;
     }
 
+    private static double logb(double x, double b) {
+        if (x <= 0) {
+            throw new IllegalArgumentException("The argument x must be greater than 0.");
+        }
+        if (b <= 0 || b == 1) {
+            throw new IllegalArgumentException("The base b must be greater than 0 and not equal to 1.");
+        }
+
+        return ln(x) / ln(b);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
