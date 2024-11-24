@@ -274,9 +274,9 @@ public class FXMLController implements Initializable {
                 series.getData().add(new XYChart.Data<>(x, y));
             }
         } else if (functionType.equals("x^y")) {
-            double yExponent = dataset.get(0);
+            double base = dataset.get(0);
             for (double x = -10; x <= 10; x++) {
-                double y = pow(x, yExponent);
+                double y = pow(base, x);
                 series.getData().add(new XYChart.Data<>(x, y));
             }
         } else if (functionType.equals("Γ(x)")) {
@@ -286,22 +286,31 @@ public class FXMLController implements Initializable {
             }
         } else if (functionType.equals("sinh(x)")) {
             for (double x = -10.0; x <= 10.0; x++) {
-                // double y = sinh(x);
-                // series.getData().add(new XYChart.Data<>(x, y));
+                double y = sinh(x);
+                series.getData().add(new XYChart.Data<>(x, y));
             }
+            yAxis.setAutoRanging(false);
+            yAxis.setLowerBound(-1000);
+            yAxis.setUpperBound(1000);
+            yAxis.setTickUnit(5);
+            yAxis.setMinorTickCount(15);
+
+            xAxis.setAutoRanging(false);
+            xAxis.setLowerBound(-10);
+            xAxis.setUpperBound(10);
+            xAxis.setTickUnit(2);
         } else if (functionType.equals("logb(x)")) {
             double base = dataset.get(0);
             double maxRange = 10;
-            for (double x = 0.01; x <= maxRange; x += 0.1) {
+            for (double x = 0.01; x <= maxRange; x += 0.05) {
                 double y = Math.log(x) / Math.log(base);
                 series.getData().add(new XYChart.Data<>(x, y));
             }
         }
-
         lineChart.getData().add(series);
         VBox layout = new VBox(10, computationLabel, lineChart);
         layout.setStyle("-fx-padding: 20;");
-        Scene scene = new Scene(layout, 700, 400);
+        Scene scene = new Scene(layout, 700, 500);
         stage.setScene(scene);
         stage.show();
     }
@@ -366,7 +375,7 @@ public class FXMLController implements Initializable {
     
     @FXML
     private void handleMADBtnClick(ActionEvent event) {
-
+        dataset.clear();
     }
 
     /**
@@ -491,7 +500,7 @@ public class FXMLController implements Initializable {
                 double x = Double.parseDouble(input);
                 String equation = "arccos(" + x + ")";
                 double result = arccos(x);
-                displayResultsWithGraph("arccos(x)", equation, result, null);
+                displayResultsWithGraph("arccos(x)", equation, result, dataset);
             } catch (NumberFormatException exception) {
                 showError("NUMBER FORMAT ERROR", "Invalid value. Please enter a numeric value.");
             } catch (RuntimeException exception) {
@@ -525,7 +534,25 @@ public class FXMLController implements Initializable {
 
     @FXML
     private void handleSineBtnClick(ActionEvent event) {
-        
+        dataset.clear();
+        // Prompt user for "x"
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Hyperbolic Sine Function");
+        dialog.setHeaderText("Compute sinh(x)");
+        dialog.setContentText("Enter the value (x):");
+
+        dialog.showAndWait().ifPresent(input -> {
+            try {
+                double x = Double.parseDouble(input);
+                String equation = "sinh(" + x + ")";
+                double result = sinh(x);
+                displayResultsWithGraph("sinh(x)", equation, result, dataset);
+            } catch (NumberFormatException exception) {
+                showError("NUMBER FORMAT ERROR", "Invalid value. Please enter a numeric value.");
+            } catch (RuntimeException exception) {
+                showError(exception.getClass().getSimpleName(), exception.getMessage());
+            }
+        });
     }
 
     @FXML
@@ -810,6 +837,15 @@ public class FXMLController implements Initializable {
         }
 
         return sum;
+    }
+
+    /**
+     * Computes the hyperbolic sine value of the double paramater "x".
+     * @param x The input value
+     * @return The hyperbolic sine of x
+     */
+    private static double sinh(double x) {
+        return 0.5 * (exp(x) - exp(-x));
     }
 
     /**
