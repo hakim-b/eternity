@@ -218,7 +218,8 @@ public class FXMLController implements Initializable {
      */
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
+        alert.setTitle("ALERT");
+        alert.setHeaderText(title);
         alert.setContentText(message);
         alert.showAndWait();
     }
@@ -231,7 +232,8 @@ public class FXMLController implements Initializable {
      */
     private void showError(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
+        alert.setTitle("ERROR");
+        alert.setHeaderText(title);
         alert.setContentText(message);
         alert.showAndWait();
     }
@@ -615,6 +617,17 @@ public class FXMLController implements Initializable {
     }
 
     /**
+     * Determines whether a decimal point is present within the output label.
+     * Exception Handling method.
+     * 
+     * @return
+     */
+    private boolean containsDecimal() {
+        String outputLabelTxt = outputLabel.getText();
+        return outputLabelTxt.contains(".");
+    }
+
+    /**
      * Inserts a numerical constant representing PI into the calculator text label.
      * 
      * @param event
@@ -624,7 +637,10 @@ public class FXMLController implements Initializable {
         String piStr = String.format("%.5f", PI);
         String outputLabelTxt = outputLabel.getText();
 
-        if (shouldReplaceZero(outputLabelTxt)) {
+        if (containsDecimal() == true) {
+            System.out.println("ERROR: there should be at most one decimal point in the expression.");
+            showAlert("INVALID INPUT", "There should be at most one decimal point in the expression.");
+        } else if (shouldReplaceZero(outputLabelTxt)) {
             outputLabel.setText(piStr);
         } else {
             outputLabel.setText(outputLabelTxt + piStr);
@@ -632,7 +648,8 @@ public class FXMLController implements Initializable {
     }
 
     /**
-     * Inserts a numerical constant representing Euler's Number into the calculator text label.
+     * Inserts a numerical constant representing Euler's Number into the calculator
+     * text label.
      * 
      * @param event
      */
@@ -641,7 +658,10 @@ public class FXMLController implements Initializable {
         String eStr = String.format("%.5f", E);
         String outputLabelTxt = outputLabel.getText();
 
-        if (shouldReplaceZero(outputLabelTxt)) {
+        if (containsDecimal() == true) {
+            System.out.println("ERROR: there should be at most one decimal point in the expression.");
+            showAlert("INVALID INPUT", "There should be at most one decimal point in the expression.");
+        } else if (shouldReplaceZero(outputLabelTxt)) {
             outputLabel.setText(eStr);
         } else {
             outputLabel.setText(outputLabelTxt + eStr);
@@ -848,8 +868,19 @@ public class FXMLController implements Initializable {
     }
 
     private boolean shouldReplaceZero(String outputTxt) {
-        return (operand1Stored && !operand2Stored && binaryOpPressed) || equalPressed || unaryOpPressed
-                || Double.parseDouble(outputTxt) == 0;
+        boolean replaceZero = (operand1Stored && !operand2Stored && binaryOpPressed) || equalPressed || unaryOpPressed;
+        if (!replaceZero) {
+            try {
+                replaceZero = Double.parseDouble(outputTxt) == 0;
+            } catch (NumberFormatException e) {
+                replaceZero = false;
+            }
+        }
+        return replaceZero;
+
+        // return (operand1Stored && !operand2Stored && binaryOpPressed) || equalPressed
+        // || unaryOpPressed
+        // Double.parseDouble(outputTxt) == 0;
     }
 
     private boolean shouldStoreOper2() {
