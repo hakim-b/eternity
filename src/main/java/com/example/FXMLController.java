@@ -685,6 +685,8 @@ public class FXMLController implements Initializable {
                 outputLabel.setText(outputLabelTxt + numInput);
             }
         }
+
+        equalPressed = false;
     }
 
     @FXML
