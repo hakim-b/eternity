@@ -15,6 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -100,7 +101,6 @@ public class FXMLController implements Initializable {
                 new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, true, true));
         pane.setBackground(new Background(bgImage));
     }
-
 
     /**
      * Displays a dedicated pane for manual data input.
@@ -253,15 +253,15 @@ public class FXMLController implements Initializable {
         Label computationLabel = new Label("Equation Evaluated: " + computation + " = " + result);
         computationLabel.setStyle("-fx-font-size: 16; -fx-padding: 10;");
 
-        // Axes for Line Chart
+        // Axes for charts
         NumberAxis xAxis = new NumberAxis();
         xAxis.setLabel("Horizontal Axis");
         NumberAxis yAxis = new NumberAxis();
         yAxis.setLabel("Vertical Axis");
 
         // Line Chart
-        LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
-        lineChart.setTitle(functionType + " Function Visualization");
+        //LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
+        //lineChart.setTitle(functionType + " Function Visualization");
 
         // Dataset Series or Function Graph
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
@@ -316,14 +316,27 @@ public class FXMLController implements Initializable {
                 series.getData().add(new XYChart.Data<>(x, y));
             }
         }
-        lineChart.getData().add(series);
-        VBox layout = new VBox(10, computationLabel, lineChart);
+
+        // Decide which type of chart to use acccording to function type
+        XYChart<Number,Number> chart;
+        if (functionType.equals("MAD") || functionType.equals("σ")){
+            ScatterChart<Number,Number> scatterChart = new ScatterChart<>(xAxis, yAxis);
+            scatterChart.setTitle(functionType + " Function Visualization");
+            scatterChart.getData().add(series);
+            chart = scatterChart;
+        } else {
+            LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
+            lineChart.setTitle(functionType + " Function Visualization");
+            lineChart.getData().add(series);
+            chart = lineChart;
+        }
+
+        VBox layout = new VBox(10, computationLabel, chart);
         layout.setStyle("-fx-padding: 20;");
         Scene scene = new Scene(layout, 700, 500);
         stage.setScene(scene);
         stage.show();
     }
-
 
     /**
      * Handles the action when the "Logarithmic Function" button is clicked.
@@ -353,7 +366,8 @@ public class FXMLController implements Initializable {
             try {
                 // Parse the input for x
                 double x = Double.parseDouble(xInput);
-                if (x < 0) throw new IllegalArgumentException("Invalid argument x, value cannot be negative");
+                if (x < 0)
+                    throw new IllegalArgumentException("Invalid argument x, value cannot be negative");
                 // Show dialog for b and process input
                 bDialog.showAndWait().ifPresent(bInput -> {
                     try {
@@ -381,17 +395,22 @@ public class FXMLController implements Initializable {
             }
         });
     }
-    
+
+    /**
+     * Handles the action when the "MAD" button is clicked.
+     * 
+     * @param event
+     */
     @FXML
     private void handleMADBtnClick(ActionEvent event) {
         dataset.clear();
-        
+
         // Prompt user for a list of numbers
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Mean Absolute Deviation Function");
         dialog.setHeaderText("Compute the Mean Absolute Deviation (MAD)");
         dialog.setContentText("Enter a list of numbers separated by commas (e.g., 1,2,3,4,5):");
-    
+
         dialog.showAndWait().ifPresent(input -> {
             try {
                 // Parse the input into an array of numbers
@@ -399,29 +418,14 @@ public class FXMLController implements Initializable {
                 double[] numbers = new double[values.length];
                 for (int i = 0; i < values.length; i++) {
                     numbers[i] = Double.parseDouble(values[i].trim());
+                    dataset.add(Double.parseDouble(values[i].trim()));
                 }
-    
-                // Calculate the mean of the numbers
-                double mean = 0;
-                for (double num : numbers) {
-                    mean += num;
-                }
-                mean /= numbers.length;
-    
-                // Calculate the Mean Absolute Deviation (MAD)
-                double mad = 0;
-                for (double num : numbers) {
-                    mad += Math.abs(num - mean);
-                }
-                mad /= numbers.length;
-    
+                double mad = MAD(numbers);
                 // Prepare the equation string
                 String equation = "MAD = (|x1-mean| + |x2-mean| + .. + |xn-mean|) / n";
-                
                 // Display the results with graph visualization
                 dataset.add(mad);
                 displayResultsWithGraph("MAD", equation, mad, dataset);
-    
             } catch (NumberFormatException exception) {
                 showError("NUMBER FORMAT ERROR", "Invalid input. Please enter a list of numeric values.");
             } catch (Exception exception) {
@@ -432,6 +436,7 @@ public class FXMLController implements Initializable {
 
     /**
      * Handles the action when the "ab^x" button is clicked.
+     * 
      * @param event
      */
     @FXML
@@ -492,6 +497,7 @@ public class FXMLController implements Initializable {
 
     /**
      * Handles the action when the "x^y" button is clicked.
+     * 
      * @param event
      */
     @FXML
@@ -510,12 +516,12 @@ public class FXMLController implements Initializable {
         exponentDialog.setContentText("Enter the exponent (y):");
 
         baseDialog.showAndWait().ifPresent(baseInput -> {
-            try { 
+            try {
                 double base = Double.parseDouble(baseInput);
                 exponentDialog.showAndWait().ifPresent(expInput -> {
                     try {
                         double exponent = Double.parseDouble(expInput);
-                        double result = pow(base,exponent);
+                        double result = pow(base, exponent);
                         dataset.add(base);
                         dataset.add(exponent);
                         String equation = "(" + base + ")^(" + exponent + ")";
@@ -530,12 +536,13 @@ public class FXMLController implements Initializable {
                 showError("NUMBER FORMAT ERROR", "Invalid base. Please enter a numeric value.");
             } catch (RuntimeException exception) {
                 showError(exception.getClass().getSimpleName(), exception.getMessage());
-            } 
+            }
         });
     }
 
     /**
      * Handles the action when the "arccos(x)" button is clicked.
+     * 
      * @param event
      */
     @FXML
@@ -615,7 +622,6 @@ public class FXMLController implements Initializable {
 
         if (shouldReplaceZero(outputLabelTxt)) {
             outputLabel.setText(numInput);
-
 
         } else {
             outputLabel.setText(outputLabelTxt + numInput);
@@ -893,6 +899,7 @@ public class FXMLController implements Initializable {
 
     /**
      * Computes the hyperbolic sine value of the double paramater "x".
+     * 
      * @param x The input value
      * @return The hyperbolic sine of x
      */
@@ -1011,8 +1018,10 @@ public class FXMLController implements Initializable {
     /**
      * Computes the logarithm of x to the base b using the existing ln function.
      * 
-     * @param x The value for which the logarithm is calculated. Must be greater than 0.
-     * @param b The base of the logarithm. Must be greater than 0 and not equal to 1.
+     * @param x The value for which the logarithm is calculated. Must be greater
+     *          than 0.
+     * @param b The base of the logarithm. Must be greater than 0 and not equal to
+     *          1.
      * @return The logarithm of x to the base b.
      * @throws IllegalArgumentException if x <= 0, b <= 0, or b == 1.
      */
@@ -1024,11 +1033,10 @@ public class FXMLController implements Initializable {
         if (b <= 0 || b == 1) {
             throw new IllegalArgumentException("The base b must be greater than 0 and not equal to 1.");
         }
-        
-        return ln(x) / ln(b); 
+
+        return ln(x) / ln(b);
     }
 
-    
     /**
      * Computes the standard deviation given a dataset of double (decimal) values.
      * Note: dataset parameter must be extracted elsewhere, users are not prompted
@@ -1057,6 +1065,30 @@ public class FXMLController implements Initializable {
         double standardDeviation = sqrt(squareDeviationSum / numDataPoints);
         System.out.println("The Standard Deviation of the Dataset is " + standardDeviation + ".");
         return standardDeviation;
+    }
+
+    /**
+     * Computes the mean absolute deviation (MAD) given a dataset of double
+     * (decimal) values.
+     * Note: dataset paramater must be extracted elsewhere, users are not prompted
+     * for them here.
+     * 
+     * @param dataset
+     * @return
+     */
+    public static double MAD(double[] dataset) {
+        // Stage #1: compute the mean of the dataset
+        double mean = 0;
+        for (double dataEntries : dataset)
+            mean += dataEntries;
+        mean /= dataset.length;
+
+        // Stage #2: compute the mean absolute deviation (MAD) of the dataset.
+        double mad = 0;
+        for (double dataEntries : dataset)
+            mad += abs(dataEntries - mean);
+        mad /= dataset.length;
+        return mad;
     }
 
     /**
