@@ -1,27 +1,36 @@
 package com.example;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
+import com.example.constants.CommonConstants;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-import java.net.URL;
-import javafx.fxml.Initializable;
-import java.util.ResourceBundle;
-import com.example.constants.CommonConstants;
 
 public class FXMLController implements Initializable {
     public Label calcSeqLbl;
@@ -376,6 +385,49 @@ public class FXMLController implements Initializable {
     @FXML
     private void handleMADBtnClick(ActionEvent event) {
         dataset.clear();
+        
+        // Prompt user for a list of numbers
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Mean Absolute Deviation Function");
+        dialog.setHeaderText("Compute the Mean Absolute Deviation (MAD)");
+        dialog.setContentText("Enter a list of numbers separated by commas (e.g., 1,2,3,4,5):");
+    
+        dialog.showAndWait().ifPresent(input -> {
+            try {
+                // Parse the input into an array of numbers
+                String[] values = input.split(",");
+                double[] numbers = new double[values.length];
+                for (int i = 0; i < values.length; i++) {
+                    numbers[i] = Double.parseDouble(values[i].trim());
+                }
+    
+                // Calculate the mean of the numbers
+                double mean = 0;
+                for (double num : numbers) {
+                    mean += num;
+                }
+                mean /= numbers.length;
+    
+                // Calculate the Mean Absolute Deviation (MAD)
+                double mad = 0;
+                for (double num : numbers) {
+                    mad += Math.abs(num - mean);
+                }
+                mad /= numbers.length;
+    
+                // Prepare the equation string
+                String equation = "MAD = (|x1-mean| + |x2-mean| + .. + |xn-mean|) / n";
+                
+                // Display the results with graph visualization
+                dataset.add(mad);
+                displayResultsWithGraph("MAD", equation, mad, dataset);
+    
+            } catch (NumberFormatException exception) {
+                showError("NUMBER FORMAT ERROR", "Invalid input. Please enter a list of numeric values.");
+            } catch (Exception exception) {
+                showError(exception.getClass().getSimpleName(), exception.getMessage());
+            }
+        });
     }
 
     /**
