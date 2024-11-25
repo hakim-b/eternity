@@ -27,6 +27,7 @@ public class MainApp extends Application {
         Scene scene = new Scene(loadFXML(fxml));
         Image icon = new Image(MainApp.class.getResourceAsStream("/calc_icon.png"));
 
+        stage.setResizable(false);
         stage.setTitle(title);
         stage.setScene(scene);
         stage.getIcons().add(icon);

@@ -260,8 +260,8 @@ public class FXMLController implements Initializable {
         yAxis.setLabel("Vertical Axis");
 
         // Line Chart
-        //LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
-        //lineChart.setTitle(functionType + " Function Visualization");
+        // LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
+        // lineChart.setTitle(functionType + " Function Visualization");
 
         // Dataset Series or Function Graph
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
@@ -318,9 +318,9 @@ public class FXMLController implements Initializable {
         }
 
         // Decide which type of chart to use acccording to function type
-        XYChart<Number,Number> chart;
-        if (functionType.equals("MAD") || functionType.equals("σ")){
-            ScatterChart<Number,Number> scatterChart = new ScatterChart<>(xAxis, yAxis);
+        XYChart<Number, Number> chart;
+        if (functionType.equals("MAD") || functionType.equals("σ")) {
+            ScatterChart<Number, Number> scatterChart = new ScatterChart<>(xAxis, yAxis);
             scatterChart.setTitle(functionType + " Function Visualization");
             scatterChart.getData().add(series);
             chart = scatterChart;
@@ -612,6 +612,40 @@ public class FXMLController implements Initializable {
                 showError(exception.getClass().getSimpleName(), exception.getMessage());
             }
         });
+    }
+
+    /**
+     * Inserts a numerical constant representing PI into the calculator text label.
+     * 
+     * @param event
+     */
+    @FXML
+    private void handlePIBtnClick(ActionEvent event) {
+        String piStr = String.format("%.5f", PI);
+        String outputLabelTxt = outputLabel.getText();
+
+        if (shouldReplaceZero(outputLabelTxt)) {
+            outputLabel.setText(piStr);
+        } else {
+            outputLabel.setText(outputLabelTxt + piStr);
+        }
+    }
+
+    /**
+     * Inserts a numerical constant representing Euler's Number into the calculator text label.
+     * 
+     * @param event
+     */
+    @FXML
+    private void handleEulerBtnClick(ActionEvent event) {
+        String eStr = String.format("%.5f", E);
+        String outputLabelTxt = outputLabel.getText();
+
+        if (shouldReplaceZero(outputLabelTxt)) {
+            outputLabel.setText(eStr);
+        } else {
+            outputLabel.setText(outputLabelTxt + eStr);
+        }
     }
 
     @FXML
