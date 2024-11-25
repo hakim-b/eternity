@@ -672,13 +672,18 @@ public class FXMLController implements Initializable {
     private void handleNumberBtnClick(ActionEvent event) {
         Button btn = (Button) event.getSource();
         String numInput = btn.getText();
-        String outputLabelTxt = outputLabel.getText();
 
-        if (shouldReplaceZero(outputLabelTxt)) {
+        if (binaryOpPressed && !operand2Stored) {
             outputLabel.setText(numInput);
-
+            operand2Stored = true;
         } else {
-            outputLabel.setText(outputLabelTxt + numInput);
+            String outputLabelTxt = outputLabel.getText();
+
+            if (shouldReplaceZero(outputLabelTxt)) {
+                outputLabel.setText(numInput);
+            } else  {
+                outputLabel.setText(outputLabelTxt + numInput);
+            }
         }
     }
 
@@ -740,20 +745,18 @@ public class FXMLController implements Initializable {
     @FXML
     private void handleBinaryBtnClick(ActionEvent event) {
         Button btn = (Button) event.getSource();
-        String binaryOperator = btn.getText();
+        String operator = btn.getText();
 
         if (!operand1Stored) {
             oper1 = Double.parseDouble(outputLabel.getText());
             operand1Stored = true;
+        } else if (operand2Stored) {
+            calculate();
         }
 
-        if (operand1Stored) {
-            updateBinaryOperator(binaryOperator);
-        }
-
+        binaryOperator = operator;
+        calcSeqLbl.setText(String.format("%f %s", oper1, binaryOperator));
         binaryOpPressed = true;
-        unaryOpPressed = false;
-        equalPressed = false;
     }
 
     private void updateBinaryOperator(String binaryOperator) {
