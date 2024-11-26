@@ -50,13 +50,12 @@ public class FXMLController implements Initializable {
     // calculation.
     private final List<Double> dataset = new ArrayList<>();
 
-    @FXML // the "σ" button belonging to the main UI
-    private Button sigmaButton;
-
     /**
-     * Handles the action when the "o" button is clicked.
+     * Handles the action when the "o" button is clicked. This method launches a
+     * specialized wizard presenting the user with two options: manually enter the
+     * dataset or import it from an external source.
      *
-     * @param e
+     * @param e The ActionEvent triggered by clicking the "o" button
      */
     @FXML
     public void handleSigmaButtonAction(ActionEvent e) {
@@ -71,10 +70,10 @@ public class FXMLController implements Initializable {
         manualInputButton.setOnAction(ev -> showManualInputPane(dataStage));
 
         // Stage #2: File Import
-        Button fileImporButton = new Button("Import from Excel");
-        fileImporButton.setOnAction(ev -> handleFileImport(dataStage));
+        Button fileImportButton = new Button("Import from Excel");
+        fileImportButton.setOnAction(ev -> handleFileImport(dataStage));
 
-        layout.getChildren().addAll(manualInputButton, fileImporButton);
+        layout.getChildren().addAll(manualInputButton, fileImportButton);
         setBackground(layout, "src\\main\\resources\\calc_sigmaWizard.png");
         Scene scene = new Scene(layout, 350, 150);
         dataStage.setTitle("Standard Deviaton Wizard!");
@@ -85,8 +84,8 @@ public class FXMLController implements Initializable {
     /**
      * Sets a custom background wallpaper for the given pane.
      * 
-     * @param pane
-     * @param imagePath
+     * @param pane      The pane whose background will be changed.
+     * @param imagePath The relative path to the background image.
      */
     private void setBackground(Pane pane, String imagePath) {
         // Load the image
@@ -103,9 +102,10 @@ public class FXMLController implements Initializable {
     }
 
     /**
-     * Displays a dedicated pane for manual data input.
+     * Auxiliary method displaying a dedicated pane enabling manual dataset input
+     * for use in standard deviation calculations.
      *
-     * @param parentStage
+     * @param parentStage The parent stage to be closed after successful data input.
      */
     private void showManualInputPane(Stage parentStage) {
         Stage manualInputStage = new Stage();
@@ -171,8 +171,10 @@ public class FXMLController implements Initializable {
      * Handles importing data from an Excel file option.
      * <p>
      * [Formatting Rules for Excel File]:
-     * - the file must be in CSV format with one numerical data point per line
+     * - the file must be in CSV format with one numerical data value per line
      * - no headers or non-numeric data should be included
+     * 
+     * @param parentStage The parent stage to be closed after data import.
      */
     private void handleFileImport(Stage parentStage) {
         FileChooser fileChooser = new FileChooser(); // constructs a file explorer window
@@ -242,10 +244,10 @@ public class FXMLController implements Initializable {
      * Displays both the result of the evaluated equation and accompanying graphical
      * visualization.
      * 
-     * @param functionType
-     * @param computation
-     * @param result
-     * @param dataset
+     * @param functionType The type of function computed.
+     * @param computation  The equation evaluated.
+     * @param result       The result of the computation.
+     * @param dataset      The dataset used for computation and visualization.
      */
     private void displayResultsWithGraph(String functionType, String computation, double result, List<Double> dataset) {
         Stage stage = new Stage();
@@ -400,8 +402,11 @@ public class FXMLController implements Initializable {
 
     /**
      * Handles the action when the "MAD" button is clicked.
+     * This method prompts the user to enter a comma-separated list of type double
+     * data values, computes the Mean Absolute Deviation (MAD), and displays the
+     * result to the user.
      * 
-     * @param event
+     * @param event The action event triggered by clicking the "MAD" button.
      */
     @FXML
     private void handleMADBtnClick(ActionEvent event) {
@@ -438,8 +443,11 @@ public class FXMLController implements Initializable {
 
     /**
      * Handles the action when the "ab^x" button is clicked.
+     * This method prompts the user to enter type double data values for paramaters
+     * a, b, and x, computes the exponential funciton ab^x, and displays the result
+     * to the user.
      * 
-     * @param event
+     * @param event The action event triggered by clicking the "ab^x" button.
      */
     @FXML
     private void handleExponentialBtnClick(ActionEvent event) {
@@ -499,8 +507,11 @@ public class FXMLController implements Initializable {
 
     /**
      * Handles the action when the "x^y" button is clicked.
+     * This method prompts the user to enter type double values for base x and
+     * exponent y, computes x raised to the power y (aka the cartesian product), and
+     * displays the result to the user.
      * 
-     * @param event
+     * @param event The action event triggered by clicking the "x^y" button.
      */
     @FXML
     private void handleCartesianProductBtnClick(ActionEvent event) {
@@ -544,8 +555,10 @@ public class FXMLController implements Initializable {
 
     /**
      * Handles the action when the "arccos(x)" button is clicked.
+     * This method prompts the user to enter a double value x, compute arccos(x),
+     * and displays the result to the user.
      * 
-     * @param event
+     * @param event The action event triggered by clicking the "arccos(x)" button.
      */
     @FXML
     private void handleArcCosBtnClick(ActionEvent event) {
@@ -570,6 +583,13 @@ public class FXMLController implements Initializable {
         });
     }
 
+    /**
+     * Handles the action when the "Γ(x)" (Gamma function) button is clicked.
+     * This method prompts the user to enter a double value x, computes Γ(x), and
+     * displays the result to the user.
+     * 
+     * @param event The action event triggered by clicking the "Γ(x)" button.
+     */
     @FXML
     private void handleGammaBtnClick(ActionEvent event) {
         dataset.clear();
@@ -593,6 +613,13 @@ public class FXMLController implements Initializable {
         });
     }
 
+    /**
+     * Handles the action when the "sinh(x)" button is clicked.
+     * This method prompts the user to enter a double value x, computes sinh(x), and
+     * displays the result.
+     *
+     * @param event The action event triggered by clicking the "sinh(x)" button.
+     */
     @FXML
     private void handleSineBtnClick(ActionEvent event) {
         dataset.clear();
@@ -620,7 +647,7 @@ public class FXMLController implements Initializable {
      * Determines whether a decimal point is present within the output label.
      * Exception Handling method.
      * 
-     * @return
+     * @return true if a decimal point is present; otherwise, false.
      */
     private boolean containsDecimal() {
         String outputLabelTxt = outputLabel.getText();
@@ -630,7 +657,7 @@ public class FXMLController implements Initializable {
     /**
      * Inserts a numerical constant representing PI into the calculator text label.
      * 
-     * @param event
+     * @param event The action event triggered by clicking the "π" button.
      */
     @FXML
     private void handlePIBtnClick(ActionEvent event) {
@@ -651,7 +678,7 @@ public class FXMLController implements Initializable {
      * Inserts a numerical constant representing Euler's Number into the calculator
      * text label.
      * 
-     * @param event
+     * @param event The action event triggered by clicking the "e" button.
      */
     @FXML
     private void handleEulerBtnClick(ActionEvent event) {
@@ -668,6 +695,12 @@ public class FXMLController implements Initializable {
         }
     }
 
+    /**
+     * Handles the action when a number button (ie: 1,2,3,4,5,etc) is clicked.
+     * This method updates the output label with the entered integer number.
+     * 
+     * @param event The action event triggered by clicking a number button.
+     */
     @FXML
     private void handleNumberBtnClick(ActionEvent event) {
         Button btn = (Button) event.getSource();
@@ -681,14 +714,19 @@ public class FXMLController implements Initializable {
 
             if (shouldReplaceZero(outputLabelTxt)) {
                 outputLabel.setText(numInput);
-            } else  {
+            } else {
                 outputLabel.setText(outputLabelTxt + numInput);
             }
         }
-
         equalPressed = false;
     }
 
+    /**
+     * Handles the action when a unary operator button (ie: %,+,-,*,/) is clicked.
+     * Performs the unary operation and updates the output label accordingly.
+     * 
+     * @param event The action event triggered by clicking a unary operator button.
+     */
     @FXML
     private void handleUnaryBtnClick(ActionEvent event) {
         Button btn = (Button) event.getSource();
@@ -738,12 +776,17 @@ public class FXMLController implements Initializable {
         }
 
         outputLabel.setText(Double.toString(result));
-
         unaryOpPressed = true;
         equalPressed = false;
         binaryOpPressed = false;
     }
 
+    /**
+     * Handles the action when a binary operator button is clicked.
+     * Stores the unary operator and prepares for the next operand.
+     * 
+     * @param event The action event triggered by clicking a binary operator button.
+     */
     @FXML
     private void handleBinaryBtnClick(ActionEvent event) {
         Button btn = (Button) event.getSource();
@@ -761,11 +804,20 @@ public class FXMLController implements Initializable {
         binaryOpPressed = true;
     }
 
+    /**
+     * Updates the current binary operator and updates the display sequence label.
+     *
+     * @param binaryOperator The binary operator to set.
+     */
     private void updateBinaryOperator(String binaryOperator) {
         this.binaryOperator = binaryOperator;
         calcSeqLbl.setText(String.format("%f %s", oper1, this.binaryOperator));
     }
 
+    /**
+     * Handles the action when the decimal point button is clicked.
+     * Adds a decimal point to the current number if not already present.
+     */
     @FXML
     private void handleDotBtnClick() {
         if (!outputLabel.getText().contains(".")) {
@@ -773,6 +825,11 @@ public class FXMLController implements Initializable {
         }
     }
 
+    /**
+     * Handles output control actions like clear entry, clear, and delete.
+     *
+     * @param event The action event triggered by clicking output control buttons.
+     */
     @FXML
     private void handleOutputControl(ActionEvent event) {
         Button button = (Button) event.getSource();
@@ -800,6 +857,9 @@ public class FXMLController implements Initializable {
         }
     }
 
+    /**
+     * Resets the calculator to its initial default state.
+     */
     private void reset() {
         outputLabel.setText("0");
         calcSeqLbl.setText("");
@@ -810,6 +870,10 @@ public class FXMLController implements Initializable {
         equalPressed = false;
     }
 
+    /**
+     * Handles the action when the equal button is clicked.
+     * Performs the calculation and updates the display.
+     */
     @FXML
     private void handleEqualBtnClick() {
         if (shouldStoreOper2()) {
@@ -825,11 +889,20 @@ public class FXMLController implements Initializable {
             unaryOpPressed = false;
         }
     }
-
+    
+    /**
+     * Determines if the calculator is ready to perform a calculation.
+     *
+     * @return true if both operands are stored; otherwise, false.
+     */
     private boolean shouldCalculate() {
         return operand1Stored && operand2Stored;
     }
 
+    /**
+     * Performs the binary calculation based on the stored operator and operands.
+     * Updates the output label text with the result.
+     */
     private void calculate() {
         oper2 = Double.parseDouble(outputLabel.getText());
         operand2Stored = true;
@@ -838,6 +911,11 @@ public class FXMLController implements Initializable {
         outputLabel.setText(Double.toString(oper1));
     }
 
+    /**
+     * Calculates the result of the binary operation.
+     *
+     * @return The result of the binary operation.
+     */
     private double getBinaryCalculation() {
         double result = 0;
 
@@ -872,6 +950,12 @@ public class FXMLController implements Initializable {
         return result;
     }
 
+    /**
+     * Determines whether the output label should be replaced with a new value.
+     *
+     * @param outputTxt The current text in the output label.
+     * @return true if the output should be replaced; otherwise, false.
+     */
     private boolean shouldReplaceZero(String outputTxt) {
         boolean replaceZero = (operand1Stored && !operand2Stored && binaryOpPressed) || equalPressed || unaryOpPressed;
         if (!replaceZero) {
@@ -882,16 +966,18 @@ public class FXMLController implements Initializable {
             }
         }
         return replaceZero;
-
-        // return (operand1Stored && !operand2Stored && binaryOpPressed) || equalPressed
-        // || unaryOpPressed
-        // Double.parseDouble(outputTxt) == 0;
     }
 
+    /**
+     * Determines if the second operand should be stored.
+     *
+     * @return true if the second operand should be stored; otherwise, false.
+     */
     private boolean shouldStoreOper2() {
         return !operand2Stored && operand1Stored && binaryOpPressed;
     }
 
+    // Constant used in gamma function calculation 
     private static final double[] p = {
             676.5203681218851,
             -1259.1392167224028,
@@ -903,15 +989,16 @@ public class FXMLController implements Initializable {
             1.5056327351493116e-7
     };
 
-    // Constants we'll need
+    // Mathematical Constants
     private static final double PI = 3.141592653589793238462643383279502884;
     private static final double E = 2.718281828459045235360287471352662497;
 
     /**
-     * Computes the gamma of a number
+     * Computes the gamma function of a number
      *
      * @param x the input number
      * @return the computed value
+     * @throws IllegalArgumentException If x is zero or a negative integer.
      */
     public static double gamma(double x) {
         if (x <= 0 && floor(x) == x) {
@@ -936,8 +1023,8 @@ public class FXMLController implements Initializable {
     /**
      * Returns the floor of a number
      *
-     * @param x the input number
-     * @return the floored result
+     * @param x The input number
+     * @return The floored result
      */
     private static double floor(double x) {
         int intValue = (int) x;
@@ -948,7 +1035,7 @@ public class FXMLController implements Initializable {
      * Computed the sin value of a real number
      *
      * @param x the input number
-     * @return the computed sin value
+     * @return the computed sine value
      */
     private static double sin(double x) {
         // Normalize x to be between -2π and 2π
@@ -978,7 +1065,7 @@ public class FXMLController implements Initializable {
     }
 
     /**
-     * Computes e^x
+     * Computes e raised to the power x.
      *
      * @param x the input exponent
      * @return the computed value
@@ -1031,7 +1118,13 @@ public class FXMLController implements Initializable {
         return exp(ln(base) * exponent);
     }
 
-    // Custom implementation of natural logarithm using Taylor series
+    /**
+     * Custom implementation of natural logarithm using Taylor series.
+     *
+     * @param x The input value.
+     * @return The natural logarithm of x.
+     * @throws IllegalArgumentException If x <= 0.
+     */
     private static double ln(double x) {
         if (x <= 0)
             throw new IllegalArgumentException("ln(x) is undefined for x <= 0");
@@ -1061,7 +1154,13 @@ public class FXMLController implements Initializable {
         return sum + scale;
     }
 
-    // Custom implementation of sqrt using Newton's method
+    /**
+     * Custom implementation of square root using Newton's method.
+     *
+     * @param x The input value.
+     * @return The square root of x.
+     * @throws IllegalArgumentException If x < 0.
+     */
     private static double sqrt(double x) {
         if (x < 0)
             throw new IllegalArgumentException("sqrt of negative number");
@@ -1085,15 +1184,14 @@ public class FXMLController implements Initializable {
         return x < 0 ? -x : x;
     }
 
+
     /**
      * Computes the logarithm of x to the base b using the existing ln function.
-     * 
-     * @param x The value for which the logarithm is calculated. Must be greater
-     *          than 0.
-     * @param b The base of the logarithm. Must be greater than 0 and not equal to
-     *          1.
+     *
+     * @param x The value for which the logarithm is calculated. Must be greater than 0.
+     * @param b The base of the logarithm. Must be greater than 0 and not equal to 1.
      * @return The logarithm of x to the base b.
-     * @throws IllegalArgumentException if x <= 0, b <= 0, or b == 1.
+     * @throws IllegalArgumentException If x <= 0, b <= 0, or b == 1.
      */
     private static double logb(double x, double b) {
         if (x <= 0) {
@@ -1108,9 +1206,11 @@ public class FXMLController implements Initializable {
     }
 
     /**
-     * Computes the standard deviation given a dataset of double (decimal) values.
-     * Note: dataset parameter must be extracted elsewhere, users are not prompted
-     * for them here.
+     * Computes the standard deviation given a dataset of double values.
+     *
+     * @param dataset The dataset as an array of doubles.
+     * @return The standard deviation of the dataset.
+     * @throws IllegalArgumentException If the dataset is empty.
      */
     public static double standardDeviation(double[] dataset) {
         int numDataPoints = dataset.length;
@@ -1138,13 +1238,10 @@ public class FXMLController implements Initializable {
     }
 
     /**
-     * Computes the mean absolute deviation (MAD) given a dataset of double
-     * (decimal) values.
-     * Note: dataset paramater must be extracted elsewhere, users are not prompted
-     * for them here.
-     * 
-     * @param dataset
-     * @return
+     * Computes the mean absolute deviation (MAD) given a dataset of double values.
+     *
+     * @param dataset The dataset as an array of doubles.
+     * @return The mean absolute deviation of the dataset.
      */
     public static double MAD(double[] dataset) {
         // Stage #1: compute the mean of the dataset
@@ -1214,6 +1311,12 @@ public class FXMLController implements Initializable {
         return result - sum;
     }
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url  The location used to resolve relative paths for the root object.
+     * @param rb   The resources used to localize the root object.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
