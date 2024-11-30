@@ -933,6 +933,7 @@ public class FXMLController implements Initializable {
                 if (oper2 == 0) {
                     outputLabel.setText("undefined");
                     reset();
+                    return Double.NaN;
                 } else {
                     result = oper1 / oper2;
                 }
