@@ -38,5 +38,5 @@ Eternity is an advanced scientific calculator application designed to provide a 
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/eternity-calculator.git
+   git clone https://github.com/hakim-b/eternity.git
    cd eternity-calculator
